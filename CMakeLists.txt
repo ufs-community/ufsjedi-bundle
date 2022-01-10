@@ -60,6 +60,7 @@ if(NOT UFS_APP MATCHES "^(ATM|NG-GODAS|S2S)$")
 endif()
 ecbuild_info("Building with UFS application: ${UFS_APP}")
 
+set(FV3_FORECAST_MODEL "UFS")
 # fv3-jedi linear model
 # ---------------------
 ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH feature/ufs UPDATE )
@@ -77,7 +78,7 @@ ExternalProject_Add(ufs-weather-model
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model
   INSTALL_DIR ${DEPEND_LIB_ROOT}
   CMAKE_ARGS ${UFS_WEATHER_MODEL_ARGS}
-  CMAKE_ARGS -DCCPP_SUITES=FV3_GFS_v16,FV3_GFS_v16_coupled,FV3_GFS_v15p2 -DREPRO=on -DOPENMP=ON -DINLINE_POST=OFF -DMULTI_GASES=OFF -DMPI=ON -DAPP=${UFS_APP} -DCMAKE_INSTALL_PREFIX=${DEPEND_LIB_ROOT}
+  CMAKE_ARGS -DCCPP_SUITES=FV3_GFS_v16,FV3_GFS_v16_coupled,FV3_GFS_v15p2 -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_Fortran_COMPILER=${CMAKE_Fortran_COMPILER} -DREPRO=on -DOPENMP=ON -DINLINE_POST=OFF -DMULTI_GASES=OFF -DMPI=ON -DAPP=${UFS_APP} -DCMAKE_INSTALL_PREFIX=${DEPEND_LIB_ROOT}
   INSTALL_COMMAND make install
   BUILD_ALWAYS FALSE
   )
@@ -119,7 +120,7 @@ if(UFS_APP MATCHES "^(S2S)$")
   ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git"     BRANCH develop UPDATE )
 elseif(UFS_APP MATCHES "^(NG-GODAS)$")
   ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git"     BRANCH develop UPDATE )
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs UPDATE )
+  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH develop UPDATE )
 elseif(UFS_APP MATCHES "^(ATM)$")
   ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    BRANCH develop UPDATE )
   ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs UPDATE )
