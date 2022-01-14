@@ -55,8 +55,8 @@ ecbuild_bundle( PROJECT ufo   GIT "https://github.com/jcsda-internal/ufo.git"   
 # ----------------------------------------
 set(UFS_APP "ATM" CACHE STRING "Choose the UFS Application")
 set_property(CACHE UFS_APP PROPERTY STRINGS "ATM" "NG-GODAS" "S2S")
-if(NOT UFS_APP MATCHES "^(ATM|NG-GODAS|S2S)$")
-  ecbuild_error("Valid options for -DUFS_APP are ATM|NG-GODAS|S2S")
+if(NOT UFS_APP MATCHES "^(ATM)$")
+  ecbuild_error("Only -DUFS_APP=ATM is currently supported")
 endif()
 ecbuild_info("Building with UFS application: ${UFS_APP}")
 
@@ -111,20 +111,8 @@ set_target_properties(stochastic_physics PROPERTIES IMPORTED_LOCATION ${DEPEND_L
 set_target_properties(fv3atm PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/lib/libfv3atm.a)
 set_target_properties(ccppphys PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/lib/libccpp_physics.a)
 
-if(UFS_APP MATCHES "^(S2S)$")
-  # fv3-jedi and associated repositories
-  # ------------------------------------
-  ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    BRANCH develop UPDATE )
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs UPDATE )
-  ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git"     BRANCH develop UPDATE )
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git"     BRANCH develop UPDATE )
-elseif(UFS_APP MATCHES "^(NG-GODAS)$")
-  ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git"     BRANCH develop UPDATE )
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH develop UPDATE )
-elseif(UFS_APP MATCHES "^(ATM)$")
-  ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    BRANCH develop UPDATE )
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs UPDATE )
-endif()
+ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs UPDATE )
 
 
 # ioda, ufo, fv3-jedi and saber test data
