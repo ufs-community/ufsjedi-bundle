@@ -141,7 +141,7 @@ find_branch_name(REPO_DIR_NAME ioda)
 # When LOCAL_PATH_JEDI_TESTFILES is set to the directory of IODA test files stored
 # in a local directory, ioda-data repo will not be cloned
 if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
-  ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/JCSDA-internal/ioda-data.git" BRANCH develop UPDATE )
+  ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/JCSDA-internal/ioda-data.git" BRANCH feature/soca UPDATE )
 endif()
 
 # If IODA's current branch is available in ioda-data repo, that branch will be checked out
