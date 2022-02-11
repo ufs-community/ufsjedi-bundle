@@ -26,7 +26,7 @@ set( ENABLE_MPI ON CACHE BOOL "Compile with MPI")
 
 # Initialize
 ecbuild_bundle_initialize()
-ecbuild_bundle( PROJECT jedicmake GIT "https://github.com/jcsda-internal/jedi-cmake.git" BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT jedicmake GIT "https://github.com/JCSDA/jedi-cmake.git" BRANCH develop UPDATE )
 include( jedicmake/cmake/Functions/git_functions.cmake  )
 
 # ECMWF libs
@@ -42,14 +42,14 @@ ecbuild_bundle( PROJECT atlas GIT "https://github.com/ecmwf/atlas.git" TAG 0.24.
 # External (required) observation operators
 # ------------------------------
 option("BUNDLE_SKIP_CRTM" "Don't build CRTM" "OFF") # Build crtm unless user passes -DBUNDLE_SKIP_CRTM=ON
-ecbuild_bundle( PROJECT crtm GIT "https://github.com/jcsda-internal/crtm.git" BRANCH release/crtm_jedi UPDATE )
+ecbuild_bundle( PROJECT crtm GIT "https://github.com/JCSDA/crtm.git" BRANCH release/crtm_jedi UPDATE )
 
 # Core JEDI repositories
 # ----------------------
-ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH develop UPDATE )
-ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda-internal/saber.git" BRANCH develop UPDATE )
-ecbuild_bundle( PROJECT ioda  GIT "https://github.com/jcsda-internal/ioda.git"  BRANCH develop UPDATE )
-ecbuild_bundle( PROJECT ufo   GIT "https://github.com/jcsda-internal/ufo.git"   BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT oops  GIT "https://github.com/JCSDA/oops.git"  BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT saber GIT "https://github.com/JCSDA/saber.git" BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT ioda  GIT "https://github.com/JCSDA/ioda.git"  BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT ufo   GIT "https://github.com/JCSDA/ufo.git"   BRANCH develop UPDATE )
 
 # Options for building with certain models
 # ----------------------------------------
@@ -60,10 +60,11 @@ if(NOT UFS_APP MATCHES "^(ATM|NG-GODAS|S2S)$")
 endif()
 ecbuild_info("Building with UFS application: ${UFS_APP}")
 
-set(FV3_FORECAST_MODEL "UFS")
 # fv3-jedi linear model
 # ---------------------
-ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH feature/ufs UPDATE )
+set(FV3_FORECAST_MODEL "UFS")
+ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/JCSDA/fv3-jedi-linearmodel.git" BRANCH develop UPDATE )
+
 
 include_directories(${DEPEND_LIB_ROOT}/include_r8)
 link_directories(${DEPEND_LIB_ROOT}/lib)
@@ -114,19 +115,21 @@ set_target_properties(ccppphys PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/l
 if(UFS_APP MATCHES "^(S2S)$")
   # fv3-jedi and associated repositories
   # ------------------------------------
-  ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    BRANCH develop UPDATE )
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs-s2s UPDATE )
-  ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git"     BRANCH develop UPDATE )
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git"     BRANCH feature/ufs UPDATE )
+  ecbuild_bundle( PROJECT femps    GIT "https://github.com/JCSDA/femps.git"    BRANCH develop UPDATE )
+  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/JCSDA/fv3-jedi.git" BRANCH feature/ufs-s2s UPDATE )
+  ecbuild_bundle( PROJECT gsw GIT "https://github.com/JCSDA-internal/GSW-Fortran.git"     BRANCH develop UPDATE )
+  ecbuild_bundle( PROJECT soca     GIT "https://github.com/JCSDA-internal/soca.git"     BRANCH feature/ufs UPDATE )
+  add_dependencies(soca ufs-weather-model)
 elseif(UFS_APP MATCHES "^(NG-GODAS)$")
-  ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git"     BRANCH develop UPDATE )
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs UPDATE )
+  ecbuild_bundle( PROJECT gsw GIT "https://github.com/JCSDA-internal/GSW-Fortran.git"     BRANCH develop UPDATE )
+  ecbuild_bundle( PROJECT soca     GIT "https://github.com/JCSDA-internal/soca.git" BRANCH feature/ufs UPDATE )
+  add_dependencies(soca ufs-weather-model)
 elseif(UFS_APP MATCHES "^(ATM)$")
-  ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    BRANCH develop UPDATE )
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs UPDATE )
+  ecbuild_bundle( PROJECT femps    GIT "https://github.com/JCSDA/femps.git"    BRANCH develop UPDATE )
+  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/JCSDA/fv3-jedi.git" BRANCH feature/ufs UPDATE )
+  ecbuild_bundle( PROJECT gsw GIT "https://github.com/JCSDA-internal/GSW-Fortran.git"     BRANCH develop UPDATE )
 endif()
 
-add_dependencies(soca ufs-weather-model)
 
 # ioda, ufo, fv3-jedi and saber test data
 #----------------------------------------
