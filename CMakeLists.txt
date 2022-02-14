@@ -63,7 +63,6 @@ ecbuild_info("Building with UFS application: ${UFS_APP}")
 # fv3-jedi linear model
 # ---------------------
 set(FV3_FORECAST_MODEL "UFS")
-execute_process( COMMAND "tar xvf patches.tar" WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/NOAA-EMC/fv3-jedi-linearmodel.git" BRANCH feature/ufs UPDATE )
 
 include_directories(${DEPEND_LIB_ROOT}/include_r8)
