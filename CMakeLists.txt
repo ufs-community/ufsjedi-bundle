@@ -48,7 +48,7 @@ ecbuild_bundle( PROJECT crtm GIT "https://github.com/JCSDA/crtm.git" BRANCH rele
 # ----------------------
 ecbuild_bundle( PROJECT oops  GIT "https://github.com/JCSDA/oops.git"  BRANCH develop UPDATE )
 ecbuild_bundle( PROJECT saber GIT "https://github.com/JCSDA/saber.git" BRANCH develop UPDATE )
-ecbuild_bundle( PROJECT ioda  GIT "https://github.com/NOAA-EMC/ioda.git"  BRANCH feature/ufs UPDATE )
+ecbuild_bundle( PROJECT ioda  GIT "https://github.com/NOAA-EMC/ioda.git"  BRANCH feature/ufs UPDATE)
 ecbuild_bundle( PROJECT ufo   GIT "https://github.com/JCSDA/ufo.git"   BRANCH develop UPDATE )
 
 # Options for building with certain models
@@ -63,7 +63,6 @@ ecbuild_info("Building with UFS application: ${UFS_APP}")
 # fv3-jedi linear model
 # ---------------------
 set(FV3_FORECAST_MODEL "UFS")
-execute_process( COMMAND "tar xvf patches.tar" WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/NOAA-EMC/fv3-jedi-linearmodel.git" BRANCH feature/ufs UPDATE )
 
 include_directories(${DEPEND_LIB_ROOT}/include_r8)
