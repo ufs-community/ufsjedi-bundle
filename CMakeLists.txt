@@ -48,7 +48,7 @@ ecbuild_bundle( PROJECT crtm GIT "https://github.com/jcsda-internal/crtm.git" BR
 # ----------------------
 ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH develop UPDATE )
 ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda-internal/saber.git" BRANCH develop UPDATE )
-ecbuild_bundle( PROJECT ioda  GIT "https://github.com/jcsda-internal/ioda.git"  BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT ioda  GIT "https://github.com/jcsda-internal/ioda.git"  BRANCH feature/ufs UPDATE )
 ecbuild_bundle( PROJECT ufo   GIT "https://github.com/jcsda-internal/ufo.git"   BRANCH develop UPDATE )
 
 # Options for building with certain models
@@ -87,7 +87,7 @@ ExternalProject_Add(FMS
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}/fms
   GIT_REPOSITORY https://github.com/jcsda/FMS.git
   GIT_SUBMODULES_RECURSE TRUE
-  GIT_TAG dev/jcsda
+  GIT_TAG jcsda/dev
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/fms
   INSTALL_DIR ${DEPEND_LIB_ROOT}
   CMAKE_ARGS -DGFS_PHYS=ON -DCMAKE_C_FLAGS="-fPIC" -DCMAKE_Fortran_FLAGS="-fPIC" -D64BIT=ON -DOPENMP=ON -DCMAKE_INSTALL_PREFIX=${DEPEND_LIB_ROOT}
@@ -153,7 +153,7 @@ endif()
 
 # If fv3-jedi's current branch is available in fv3-jedi-data repo, that branch will be checked out
 branch_checkout (REPO_DIR_NAME fv3-jedi-data
-                 BRANCH ${GIT_BRANCH_FUNC} )
+                 BRANCH feature/ufs )
 
 # same procedure for saber-data
 find_branch_name(REPO_DIR_NAME saber)
