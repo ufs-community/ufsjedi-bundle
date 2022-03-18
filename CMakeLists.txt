@@ -74,7 +74,7 @@ ExternalProject_Add(ufs-weather-model
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
   GIT_REPOSITORY https://github.com/mark-a-potts/ufs-weather-model.git
   GIT_SUBMODULES_RECURSE TRUE
-  GIT_TAG feature/soca
+  GIT_TAG feature/godas
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model
   INSTALL_DIR ${DEPEND_LIB_ROOT}
   CMAKE_ARGS ${UFS_WEATHER_MODEL_ARGS}
