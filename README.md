@@ -35,7 +35,9 @@ The code will build on Cheyenne, but there is some sort of mpi issue when trying
 
 module use /glade/work/epicufsrt/GMTB/tools/gnu/10.1.0/hpc-stack-v1.2.0/modulefiles/stack
 module load gnu/10.1.0 mpt/2.22 hpc hpc-gnu hpc-mpt/2.22
-hdf5/1.10.6 esmf/8.3.0b09 netcdf/4.7.4 eckit fckit eigen boost pnetcdf pio/2.5.3 ecbuild udunits bacio w3nco w3emc nemsio sigio sfcio sp expat gsl-lite openblas cmake/3.22.0 python/3.7.9
+module load hdf5/1.10.6 esmf/8.3.0b09 netcdf/4.7.4 eckit fckit eigen boost pnetcdf pio/2.5.3 ecbuild udunits bacio w3nco w3emc nemsio sigio sfcio sp expat gsl-lite openblas cmake/3.22.0 python/3.7.9 git
+
+git lfs install
 
 ecbuild -DMPI_Fortran_LINK_FLAGS="-lexpat" -DCMAKE_PREFIX_PATH=/glade/work/epicufsrt/GMTB/tools/intel/2022.1/hpc-stack-v1.2.0_6eb6/core/gsl-lite/0.37.0/lib64/cmake -DBLAS_openblas_LIBRARY:FILEPATH=$NCAR_ROOT_OPENBLAS/lib/libopenblas.so -DBUNDLE_SKIP_ATLAS=OFF -DBUILD_TESTING=TRUE -DCMAKE_C_COMPILER=mpicc -DCMAKE_CXX_COMPILER=mpicxx -DCMAKE_Fortran_COMPILER=mpif90 -DMPI_CXX_LINK_FLAGS:STRING="-Wl,--copy-dt-needed-entries" -DCMAKE_BUILD_TYPE=DEBUG -DUFS_APP=NG-GODAS ..
 
