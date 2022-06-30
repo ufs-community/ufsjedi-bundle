@@ -37,7 +37,7 @@ option("BUNDLE_SKIP_ATLAS" "Don't build atlas" "ON") # Skip atlas build unless u
 
 ecbuild_bundle( PROJECT eckit GIT "https://github.com/ecmwf/eckit.git" TAG 1.16.0 )
 ecbuild_bundle( PROJECT fckit GIT "https://github.com/ecmwf/fckit.git" TAG 0.9.2 )
-ecbuild_bundle( PROJECT atlas GIT "https://github.com/ecmwf/atlas.git" TAG 0.24.1 )
+ecbuild_bundle( PROJECT atlas GIT "https://github.com/ecmwf/atlas.git" TAG 0.27.0 )
 
 # External (required) observation operators
 # ------------------------------
