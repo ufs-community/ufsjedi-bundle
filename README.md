@@ -13,8 +13,21 @@ configured with S2S coupling. Only the first two configurations have test cases 
 
 The parameter for specifying the configuration type is "-DAPP=(ATM/NG-GODAS/S2S)" on the ecbuild configuration line.
 
-The following ecbuild line will configure the NG-GODAS application on Hera--
+To build on Hera, load the following modules--
+module use /scratch2/NCEPDEV/nwprod/hpc-stack/libs/hpc-stack/modulefiles/stack
+module load hpc hpc-gnu hpc-mpich
+module load esmf/8.3.0b09 hdf5 netcdf eckit fckit cmake gsl-lite bacio sfcio sp eigen boost atlas pio intel-mkl parallel-netcdf ecbuild udunits nemsio/2.5.2 w3emc/2.9.2 sigio expat
+
+create a build directory under ufs-jedi-bundle and cd to it. Then run the following ecbuild command (substitute "ATM" for "NG-GODAS" as desired.
 
 ecbuild -DMPI_Fortran_LINK_FLAGS="-lexpat" -DBUNDLE_SKIP_ATLAS=OFF -DBUILD_TESTING=TRUE -DCMAKE_C_COMPILER=mpicc -DCMAKE_CXX_COMPILER=mpicxx -DCMAKE_Fortran_COMPILER=mpifort -DMPI_CXX_LINK_FLAGS:STRING="-Wl,--copy-dt-needed-entries" -DCMAKE_BUILD_TYPE=DEBUG -DUFS_APP=NG-GODAS .. 
+
+While building with SOCA (NG-GODAS or S2S) there will be a long pause during configuration when ecbuild is downloading the input files for the test to be run.
+
+After configuration, run "make -j 8" to build. The ctest for NG-GODAS is called test_soca_forecast_ufs, but the ctests using mpich don't run out of the box on
+Hera. You will need to run it manually from the build/soca/test directory. Cd to that directory and run the following to test the forecast--
+
+srun --mpi=pmi2 -n 8 /scratch1/NCEPDEV/da/Mark.Potts/jedi/ufs-jedi-bundle/build-gnu/bin/soca_forecast.x testinput/forecast_ufs.yml
+
 
 
