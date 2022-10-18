@@ -1,14 +1,14 @@
 # (C) Copyright 2021-2021 NOAA
 
 # ##########
-# ufs-jedi-bundle
+# ufs-bundle
 # ##########
 
 cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 
 find_package( ecbuild 3.5 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 
-project( ufs-jedi-bundle VERSION 1.1.0 LANGUAGES C CXX Fortran )
+project( ufs-bundle VERSION 1.1.0 LANGUAGES C CXX Fortran )
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -24,10 +24,13 @@ set( ECBUILD_DEFAULT_BUILD_TYPE Release )
 # Enable MPI
 set( ENABLE_MPI ON CACHE BOOL "Compile with MPI")
 
-# Initialize
-ecbuild_bundle_initialize()
-ecbuild_bundle( PROJECT jedicmake GIT "https://github.com/jcsda-internal/jedi-cmake.git" TAG 1.3.0 )
-include( jedicmake/cmake/Functions/git_functions.cmake  )
+# Use external jedi-cmake or build in bundle
+if(DEFINED ENV{jedi_cmake_ROOT})
+  include( $ENV{jedi_cmake_ROOT}/share/jedicmake/Functions/git_functions.cmake )
+else()
+  ecbuild_bundle( PROJECT jedicmake GIT "https://github.com/jcsda-internal/jedi-cmake.git" BRANCH develop UPDATE RECURSIVE )
+  include( jedicmake/cmake/Functions/git_functions.cmake )
+endif()
 
 # ECMWF libs
 # ----------
@@ -41,8 +44,11 @@ ecbuild_bundle( PROJECT atlas GIT "https://github.com/ecmwf/atlas.git" TAG 0.29.
 
 # External (required) observation operators
 # ------------------------------
-option("BUNDLE_SKIP_CRTM" "Don't build CRTM" "OFF") # Build crtm unless user passes -DBUNDLE_SKIP_CRTM=ON
+option("BUNDLE_SKIP_CRTM" "Don't build CRTM" "ON") # Build crtm unless user passes -DBUNDLE_SKIP_CRTM=ON
 ecbuild_bundle( PROJECT crtm GIT "https://github.com/jcsda-internal/crtm.git" BRANCH release/crtm_jedi )
+
+# External FMS
+find_package(FMS 2022.01 REQUIRED COMPONENTS R4 R8)
 
 # Core JEDI repositories
 # ----------------------
@@ -79,33 +85,33 @@ ExternalProject_Add(ufs-weather-model
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model
   INSTALL_DIR ${DEPEND_LIB_ROOT}
   CMAKE_ARGS ${UFS_WEATHER_MODEL_ARGS}
-  CMAKE_ARGS -DMPI_Fortran_LINK_FLAGS:STRING="-Wl,--copy-dt-needed-entries" -DCMAKE_C_FLAGS=-fPIC -DCMAKE_Fortran_FLAGS="-fPIC" -DCMAKE_CXX_FLAGS=-fPIC  -DCCPP_SUITES=FV3_GFS_v16,FV3_GFS_v16_coupled,FV3_GFS_v15p2 -DCMAKE_EXE_LINKER_FLAGS=-L${CMAKE_CURRENT_BINARY_DIR}/lib -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_Fortran_COMPILER=${CMAKE_Fortran_COMPILER} -DREPRO=on -DOPENMP=ON -DINLINE_POST=OFF -DMULTI_GASES=OFF -DMPI=ON -DAPP=${UFS_APP} -DCMAKE_INSTALL_PREFIX=${DEPEND_LIB_ROOT}
+  CMAKE_ARGS -DMPI_Fortran_LINK_FLAGS:STRING="-Wl,--copy-dt-needed-entries" -DCMAKE_C_FLAGS=-fPIC -DCMAKE_Fortran_FLAGS="-fPIC" -DCMAKE_CXX_FLAGS=-fPIC  -DCCPP_SUITES=FV3_GFS_v16,FV3_GFS_v16_coupled,FV3_GFS_v15p2 -DCMAKE_EXE_LINKER_FLAGS=-L${CMAKE_CURRENT_BINARY_DIR}/lib -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_Fortran_COMPILER=${CMAKE_Fortran_COMPILER} -DREPRO=ON -DOPENMP=ON -DINLINE_POST=OFF -DMULTI_GASES=OFF -DMPI=ON -DAPP=${UFS_APP} -DCMAKE_INSTALL_PREFIX=${DEPEND_LIB_ROOT}
   INSTALL_COMMAND make install
   BUILD_ALWAYS FALSE
   )
 
-ExternalProject_Add(FMS
-  PREFIX ${CMAKE_CURRENT_BINARY_DIR}/fms
-  GIT_REPOSITORY https://github.com/NOAA-GFDL/FMS.git
-  GIT_TAG 2022.02
-  GIT_SUBMODULES_RECURSE TRUE
-  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/fms
-  INSTALL_DIR ${DEPEND_LIB_ROOT}
-  CMAKE_ARGS -DGFS_PHYS=ON -DCMAKE_C_FLAGS="-fPIC" -DCMAKE_Fortran_FLAGS="-fPIC" -D64BIT=ON -DOPENMP=ON -DCMAKE_INSTALL_PREFIX=${DEPEND_LIB_ROOT}
-  INSTALL_COMMAND make install
-  BUILD_ALWAYS TRUE
-  )
+#ExternalProject_Add(FMS
+#  PREFIX ${CMAKE_CURRENT_BINARY_DIR}/fms
+#  GIT_REPOSITORY https://github.com/NOAA-GFDL/FMS.git
+#  GIT_TAG 2022.02
+#  GIT_SUBMODULES_RECURSE TRUE
+#  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/fms
+#  INSTALL_DIR ${DEPEND_LIB_ROOT}
+#  CMAKE_ARGS -DGFS_PHYS=ON -DCMAKE_C_FLAGS="-fPIC" -DCMAKE_Fortran_FLAGS="-fPIC" -D64BIT=ON -DOPENMP=ON -DCMAKE_INSTALL_PREFIX=${DEPEND_LIB_ROOT}
+#  INSTALL_COMMAND make install
+#  BUILD_ALWAYS TRUE
+#  )
 
-add_dependencies(ufs-weather-model FMS )
+#add_dependencies(ufs-weather-model FMS )
 add_library( ufs IMPORTED STATIC)
-add_library( FMS::fms_r4 IMPORTED STATIC)
-add_library( FMS::fms_r8 IMPORTED STATIC)
+#add_library( FMS::fms_r4 IMPORTED STATIC)
+#add_library( FMS::fms_r8 IMPORTED STATIC)
 add_library( ccpp IMPORTED STATIC)
 add_library( stochastic_physics IMPORTED STATIC)
 add_library( fv3atm IMPORTED STATIC)
 add_library( ccppphys IMPORTED STATIC)
-set_target_properties(FMS::fms_r4 PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/lib/libfms_r4.a)
-set_target_properties(FMS::fms_r8 PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/lib/libfms_r8.a)
+#set_target_properties(FMS::fms_r4 PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/lib/libfms_r4.a)
+#set_target_properties(FMS::fms_r8 PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/lib/libfms_r8.a)
 set_target_properties(ufs PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/lib/libufs.a)
 set_target_properties(ccpp PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/lib/libccpp_framework.a)
 set_target_properties(stochastic_physics PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/lib/libstochastic_physics.a)
