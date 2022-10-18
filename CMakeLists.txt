@@ -70,7 +70,7 @@ ecbuild_info("Building with UFS application: ${UFS_APP}")
 set(FV3_FORECAST_MODEL "UFS")
 # fv3-jedi linear model
 # ---------------------
-ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH feature/ufs )
+ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH feature/ufs_dom )
 
 include_directories(${DEPEND_LIB_ROOT}/include_r8)
 link_directories(${DEPEND_LIB_ROOT}/lib)
@@ -79,9 +79,9 @@ include( ExternalProject )
 
 ExternalProject_Add(ufs-weather-model
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
-  GIT_REPOSITORY https://github.com/mark-a-potts/ufs-weather-model.git
+  GIT_REPOSITORY https://github.com/climbfuji/ufs-weather-model
   GIT_SUBMODULES_RECURSE TRUE
-  GIT_TAG feature/consolidate
+  GIT_TAG feature/consolidate_dom
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model
   INSTALL_DIR ${DEPEND_LIB_ROOT}
   CMAKE_ARGS ${UFS_WEATHER_MODEL_ARGS}
@@ -122,7 +122,7 @@ if(UFS_APP MATCHES "^(S2S)$")
   # fv3-jedi and associated repositories
   # ------------------------------------
   ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.2.0 )
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs )
+  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs_dom )
   ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git"     TAG ac1d9aee7042a745a6f88dc93e179882e0cd81ee )
   ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git"     BRANCH feature/ufs )
   add_dependencies(soca ufs-weather-model)
