@@ -23,10 +23,14 @@ create a build directory under ufs-jedi-bundle and cd to it. Then run the follow
 
 ecbuild -DLAPACK_LIBRARIES="/scratch1/NCEPDEV/jcsda/jedipara/opt/modules/gnu-9.2.0/lapack/3.8.0/lib/liblapack.a;/scratch1/NCEPDEV/jcsda/jedipara/opt/modules/gnu-9.2.0/lapack/3.8.0/lib/libblas.a" -DBLAS_openblas_LIBRARY:FILEPATH=/scratch1/NCEPDEV/jcsda/jedipara/opt/modules/gnu-9.2.0/lapack/3.8.0/lib/libblas.a -DMPI_Fortran_LINK_FLAGS="-lexpat" -DBUNDLE_SKIP_ATLAS=OFF -DBUILD_TESTING=TRUE -DCMAKE_C_COMPILER=mpicc -DCMAKE_CXX_COMPILER=mpicxx -DCMAKE_Fortran_COMPILER=mpifort -DMPI_CXX_LINK_FLAGS:STRING="-Wl,--copy-dt-needed-entries" -DCMAKE_BUILD_TYPE=DEBUG -DUFS_APP=NG-GODAS .. 
 
+# NOTE: WITH SPACK-STACK, I DIDN'T NEED ANY OF THIS ... just "ecbuild --build=debug -DUFS_APP=ATM .. 2>&1 | tee log.ecbuild"
+
 While building with SOCA (NG-GODAS or S2S) there will be a long pause during configuration when ecbuild is downloading the input files for the test to be run.
 
 After configuration, run "make -j 8" to build. The ctest for NG-GODAS is called test_soca_forecast_ufs, but the ctests using mpich don't run out of the box on
 Hera. You will need to run it manually from the build/soca/test directory. Cd to that directory and run the following to test the forecast--
+
+NO, FIX AND USE -DMPIEXEC_EXECUTABLE ETC. THEN SALLOC
 
 srun --mpi=pmi2 -n 8 ../../bin/soca_forecast.x testinput/forecast_ufs.yml
 
