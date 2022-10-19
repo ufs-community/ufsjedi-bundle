@@ -42,11 +42,6 @@ ecbuild_bundle( PROJECT eckit GIT "https://github.com/ecmwf/eckit.git" TAG 1.18.
 ecbuild_bundle( PROJECT fckit GIT "https://github.com/ecmwf/fckit.git" TAG 0.9.5 )
 ecbuild_bundle( PROJECT atlas GIT "https://github.com/ecmwf/atlas.git" TAG 0.29.0 )
 
-# External (required) observation operators
-# ------------------------------
-option("BUNDLE_SKIP_CRTM" "Don't build CRTM" "ON") # Build crtm unless user passes -DBUNDLE_SKIP_CRTM=ON
-ecbuild_bundle( PROJECT crtm GIT "https://github.com/jcsda-internal/crtm.git" BRANCH release/crtm_jedi )
-
 # External FMS
 find_package(FMS 2022.01 REQUIRED COMPONENTS R4 R8)
 
@@ -54,7 +49,7 @@ find_package(FMS 2022.01 REQUIRED COMPONENTS R4 R8)
 # ----------------------
 ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  TAG 8ef84459463663fcdef38cdb94e67dc915ea80bc )
 ecbuild_bundle( PROJECT vader GIT "https://github.com/jcsda-internal/vader.git" TAG 1.0.0 )
-ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda-internal/saber.git" TAG 8bee2e68efad0734a95565b14249bf0b7dd4e6f2 )
+ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda-internal/saber.git" BRANCH bugfix/add_missing_netcdf_dependency_to_build_system )
 ecbuild_bundle( PROJECT ioda  GIT "https://github.com/jcsda-internal/ioda.git"  TAG b38794726d0f3fcfc27b3bff80d590bb451110f0 )
 ecbuild_bundle( PROJECT ufo   GIT "https://github.com/jcsda-internal/ufo.git"   TAG 67ab97f61893782fc826c0be05b7ef7678ba7dba )
 
@@ -85,33 +80,16 @@ ExternalProject_Add(ufs-weather-model
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model
   INSTALL_DIR ${DEPEND_LIB_ROOT}
   CMAKE_ARGS ${UFS_WEATHER_MODEL_ARGS}
-  CMAKE_ARGS -DMPI_Fortran_LINK_FLAGS:STRING="-Wl,--copy-dt-needed-entries" -DCMAKE_C_FLAGS=-fPIC -DCMAKE_Fortran_FLAGS="-fPIC" -DCMAKE_CXX_FLAGS=-fPIC  -DCCPP_SUITES=FV3_GFS_v16,FV3_GFS_v16_coupled,FV3_GFS_v15p2 -DCMAKE_EXE_LINKER_FLAGS=-L${CMAKE_CURRENT_BINARY_DIR}/lib -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_Fortran_COMPILER=${CMAKE_Fortran_COMPILER} -DREPRO=ON -DOPENMP=ON -DINLINE_POST=OFF -DMULTI_GASES=OFF -DMPI=ON -DAPP=${UFS_APP} -DCMAKE_INSTALL_PREFIX=${DEPEND_LIB_ROOT}
+  CMAKE_ARGS -DCMAKE_C_FLAGS=-fPIC -DCMAKE_Fortran_FLAGS=-fPIC -DCMAKE_CXX_FLAGS=-fPIC -DCCPP_SUITES=FV3_GFS_v16,FV3_GFS_v16_coupled,FV3_GFS_v15p2 -DCMAKE_EXE_LINKER_FLAGS=-L${CMAKE_CURRENT_BINARY_DIR}/lib -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_Fortran_COMPILER=${CMAKE_Fortran_COMPILER} -DREPRO=ON -DOPENMP=ON -DINLINE_POST=OFF -DMULTI_GASES=OFF -DMPI=ON -DAPP=${UFS_APP} -DCMAKE_INSTALL_PREFIX=${DEPEND_LIB_ROOT}
   INSTALL_COMMAND make install
   BUILD_ALWAYS FALSE
   )
 
-#ExternalProject_Add(FMS
-#  PREFIX ${CMAKE_CURRENT_BINARY_DIR}/fms
-#  GIT_REPOSITORY https://github.com/NOAA-GFDL/FMS.git
-#  GIT_TAG 2022.02
-#  GIT_SUBMODULES_RECURSE TRUE
-#  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/fms
-#  INSTALL_DIR ${DEPEND_LIB_ROOT}
-#  CMAKE_ARGS -DGFS_PHYS=ON -DCMAKE_C_FLAGS="-fPIC" -DCMAKE_Fortran_FLAGS="-fPIC" -D64BIT=ON -DOPENMP=ON -DCMAKE_INSTALL_PREFIX=${DEPEND_LIB_ROOT}
-#  INSTALL_COMMAND make install
-#  BUILD_ALWAYS TRUE
-#  )
-
-#add_dependencies(ufs-weather-model FMS )
 add_library( ufs IMPORTED STATIC)
-#add_library( FMS::fms_r4 IMPORTED STATIC)
-#add_library( FMS::fms_r8 IMPORTED STATIC)
 add_library( ccpp IMPORTED STATIC)
 add_library( stochastic_physics IMPORTED STATIC)
 add_library( fv3atm IMPORTED STATIC)
 add_library( ccppphys IMPORTED STATIC)
-#set_target_properties(FMS::fms_r4 PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/lib/libfms_r4.a)
-#set_target_properties(FMS::fms_r8 PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/lib/libfms_r8.a)
 set_target_properties(ufs PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/lib/libufs.a)
 set_target_properties(ccpp PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/lib/libccpp_framework.a)
 set_target_properties(stochastic_physics PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/lib/libstochastic_physics.a)
