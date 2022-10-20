@@ -67,6 +67,10 @@ set(FV3_FORECAST_MODEL "UFS")
 # ---------------------
 ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH feature/ufs_dom )
 
+if(UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES "^(NG-GODAS)$")
+  ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git" TAG ac1d9aee7042a745a6f88dc93e179882e0cd81ee )
+endif()
+
 include_directories(${DEPEND_LIB_ROOT}/include_r8)
 link_directories(${DEPEND_LIB_ROOT}/lib)
 
@@ -85,6 +89,7 @@ ExternalProject_Add(ufs-weather-model
   BUILD_ALWAYS FALSE
   )
 
+add_dependencies(ufs-weather-model gsw)
 add_library( ufs IMPORTED STATIC)
 add_library( ccpp IMPORTED STATIC)
 add_library( stochastic_physics IMPORTED STATIC)
@@ -101,11 +106,11 @@ if(UFS_APP MATCHES "^(S2S)$")
   # ------------------------------------
   ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.2.0 )
   ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs_dom )
-  ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git"     TAG ac1d9aee7042a745a6f88dc93e179882e0cd81ee )
+  #ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git"     TAG ac1d9aee7042a745a6f88dc93e179882e0cd81ee )
   ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git"     BRANCH feature/ufs_dom )
   add_dependencies(soca ufs-weather-model)
 elseif(UFS_APP MATCHES "^(NG-GODAS)$")
-  ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git"     TAG ac1d9aee7042a745a6f88dc93e179882e0cd81ee )
+  #ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git"     TAG ac1d9aee7042a745a6f88dc93e179882e0cd81ee )
   ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_dom )
   add_dependencies(soca ufs-weather-model)
 elseif(UFS_APP MATCHES "^(ATM)$")
