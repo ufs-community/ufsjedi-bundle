@@ -37,11 +37,39 @@ module load jedi-ewok-env/1.0.0
 module load soca-env/1.0.0
 # Loading ufs-weather-model-env replaces the JEDI version of FMS and CRTM
 module load ufs-weather-model-env/1.0.0
-# Need to reload JEDI CRTM
+# Need to reload JEDI CRTM - do NOT reload FMS, we need fms/2022.01
 module load crtm/v2.4_jedi
 module load sigio/2.3.2
-module load w3emc/2.9.1
+module load w3emc/2.9.1 # # So far not on macOS: 2.9.2
 module load nemsio/2.5.2
+# So far not on macOS: module load fms/2022.02
+
+
+
+# ORION
+module purge
+module use /work/noaa/da/role-da/spack-stack/modulefiles
+module load miniconda/3.9.7
+module load ecflow/5.8.4
+
+module use /work/noaa/da/role-da/spack-stack/spack-stack-v1/envs/skylab-2.0.0-plus-ufs-intel-2022.0.2/install/modulefiles/Core
+module load stack-intel/2022.0.2
+module load stack-intel-oneapi-mpi/2021.5.1
+module load stack-python/3.9.7
+
+module load jedi-fv3-env/1.0.0
+module load jedi-ewok-env/1.0.0
+module load soca-env/1.0.0
+# Loading ufs-weather-model-env replaces the JEDI version of FMS and CRTM
+module load ufs-weather-model-env/1.0.0
+# Need to reload JEDI CRTM - do NOT reload FMS, we need fms/2022.01
+module load crtm/v2.4_jedi
+module load sigio/2.3.2
+module load w3emc/2.9.2
+module load nemsio/2.5.2
+module load fms/2022.02
+
+cd /work2/noaa/da/dheinzel/ufs-bundle/build-debug-atm
 
 The bundle can be built in three different configuragions--with fv3-jedi and the UFS configured for atmosphere-only, 
 with soca and the UFS configured with a data-atmosphere using NG-GODAS, or with fv3-jedi and soca and the UFS
@@ -55,6 +83,7 @@ ecbuild --build=debug -DUFS_APP=NG-GODAS .. 2>&1 | tee log.ecbuild
 #ecbuild --build=debug -DUFS_APP=S2S .. 2>&1 | tee log.ecbuild
 
 On macOS, it may be required to pass -DCMAKE_EXE_LINKER_FLAGS="-Wl,-no_compact_unwind" to the ecbuild command.
+
 
 While building with SOCA (NG-GODAS or S2S) there will be a long pause during configuration when ecbuild is downloading the input files for the test to be run.
 
