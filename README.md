@@ -37,14 +37,12 @@ module load jedi-ewok-env/1.0.0
 module load soca-env/1.0.0
 # Loading ufs-weather-model-env replaces the JEDI version of FMS and CRTM
 module load ufs-weather-model-env/1.0.0
-# Need to reload JEDI CRTM - do NOT reload FMS, we need fms/2022.01
+# Need to reload JEDI CRTM - and fms/2022.02 +fpic
 module load crtm/v2.4_jedi
+module laod fms/2022.02
 module load sigio/2.3.2
-module load w3emc/2.9.1 # # So far not on macOS: 2.9.2
+module load w3emc/2.9.2
 module load nemsio/2.5.2
-# So far not on macOS: module load fms/2022.02
-
-
 
 # ORION
 module purge
@@ -62,12 +60,12 @@ module load jedi-ewok-env/1.0.0
 module load soca-env/1.0.0
 # Loading ufs-weather-model-env replaces the JEDI version of FMS and CRTM
 module load ufs-weather-model-env/1.0.0
-# Need to reload JEDI CRTM - do NOT reload FMS, we need fms/2022.01
+# Need to reload JEDI CRTM - and fms/2022.02 +fpic
 module load crtm/v2.4_jedi
+module laod fms/2022.02
 module load sigio/2.3.2
 module load w3emc/2.9.2
 module load nemsio/2.5.2
-module load fms/2022.02
 
 cd /work2/noaa/da/dheinzel/ufs-bundle/build-debug-atm
 
