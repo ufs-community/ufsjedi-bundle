@@ -69,7 +69,7 @@ ecbuild_info("Building with UFS application: ${UFS_APP}")
 set(FV3_FORECAST_MODEL "UFS")
 # fv3-jedi linear model
 # ---------------------
-ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH feature/ufs_dom )  # updated from develop on nov 15
+ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH feature/ufs_dom )  # updated from develop on nov 22
 
 include_directories(${DEPEND_LIB_ROOT}/include_r8)
 link_directories(${DEPEND_LIB_ROOT}/lib)
@@ -141,7 +141,7 @@ find_branch_name(REPO_DIR_NAME ioda)
 # When LOCAL_PATH_JEDI_TESTFILES is set to the directory of IODA test files stored
 # in a local directory, ioda-data repo will not be cloned
 if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
-  ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/JCSDA-internal/ioda-data.git" BRANCH feature/soca )  # updated from develop on nov 15
+  ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/JCSDA-internal/ioda-data.git" TAG 2d9fb746b26a306711800960f471cb2ddc56c15c )  # develop on nov 22
 endif()
 
 # If IODA's current branch is available in ioda-data repo, that branch will be checked out
@@ -161,7 +161,7 @@ branch_checkout (REPO_DIR_NAME ufo-data
 # same procedure for fv3-jedi-data
 find_branch_name(REPO_DIR_NAME fv3-jedi)
 if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
-  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/ufs )  # updated from develop on nov 15
+  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/ufs_dom )  # updated from develop on nov 15
 endif()
 
 # If fv3-jedi's current branch is available in fv3-jedi-data repo, that branch will be checked out
