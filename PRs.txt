@@ -1,0 +1,11 @@
+https://github.com/JCSDA-internal/fv3-jedi-linearmodel/pull/16
+https://github.com/JCSDA-internal/fv3-jedi/pull/697
+https://github.com/JCSDA-internal/soca/pull/824
+https://github.com/JCSDA-internal/fv3-jedi-data/pull/52
+https://github.com/JCSDA-internal/saber/pull/385
+
+ufs-weather-model PRs:
+https://github.com/NOAA-EMC/AQM/pull/40
+https://github.com/NOAA-EMC/MOM6/pull/107
+FV3 PR missing!
+https://github.com/ufs-community/ufs-weather-model/pull/1504
