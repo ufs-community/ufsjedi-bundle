@@ -80,8 +80,7 @@ ecbuild --build=debug -DUFS_APP=NG-GODAS .. 2>&1 | tee log.ecbuild
 # Note - not yet tested on macOS with spack-stack
 #ecbuild --build=debug -DUFS_APP=S2S .. 2>&1 | tee log.ecbuild
 
-On macOS, it may be required to pass -DCMAKE_EXE_LINKER_FLAGS="-Wl,-no_compact_unwind" to the ecbuild command.
-
+On macOS, it may be required to pass -DCMAKE_EXE_LINKER_FLAGS="-Wl,-no_compact_unwind" to the ecbuild command. Further, if using the native Apple clang compiler with llvm-openmp installed via homebrew or spack, it may be necessary to add -DCMAKE_SHARED_LINKER_FLAGS="/path/to/llvm-openmp-x.y.z/lib/libomp.dylib" to the ecbuild command.
 
 While building with SOCA (NG-GODAS or S2S) there will be a long pause during configuration when ecbuild is downloading the input files for the test to be run.
 

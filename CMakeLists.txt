@@ -23,6 +23,7 @@ set( ECBUILD_DEFAULT_BUILD_TYPE Release )
 
 # Enable MPI
 set( ENABLE_MPI ON CACHE BOOL "Compile with MPI")
+set( ENABLE_OMP ON CACHE BOOL "Compile with OpenMP")
 
 # Use external jedi-cmake or build in bundle
 if(DEFINED ENV{jedi_cmake_ROOT})
@@ -65,8 +66,8 @@ if(NOT UFS_APP MATCHES "^(ATM|NG-GODAS|S2S)$")
   ecbuild_error("Valid options for -DUFS_APP are ATM|NG-GODAS|S2S")
 endif()
 ecbuild_info("Building with UFS application: ${UFS_APP}")
-
 set(FV3_FORECAST_MODEL "UFS")
+
 # fv3-jedi linear model
 # ---------------------
 ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH feature/ufs_dom )  # updated from develop on nov 22
@@ -82,10 +83,7 @@ find_package(OpenMP REQUIRED)
 if(APPLE)
   set(UFS_CMAKE_EXE_LINKER_FLAGS "${UFS_CMAKE_EXE_LINKER_FLAGS} ${OpenMP_libomp_LIBRARY} ${OpenMP_libomp_LIBRARY}")
 endif()
-message (INFO "OpenMP_gomp_LIBRARY: ${OpenMP_gomp_LIBRARY}")
-message (INFO "OpenMP_libomp_LIBRARY: ${OpenMP_libomp_LIBRARY}")
-message (INFO "OpenMP_EXE_LINKER_FLAGS: ${OpenMP_EXE_LINKER_FLAGS}")
-message (INFO "UFS_CMAKE_EXE_LINKER_FLAGS: ${UFS_CMAKE_EXE_LINKER_FLAGS}")
+message (SATUS "UFS_CMAKE_EXE_LINKER_FLAGS: ${UFS_CMAKE_EXE_LINKER_FLAGS}")
 
 ExternalProject_Add(ufs-weather-model
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
