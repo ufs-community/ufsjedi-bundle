@@ -7,5 +7,6 @@ https://github.com/JCSDA-internal/saber/pull/385
 ufs-weather-model PRs:
 https://github.com/NOAA-EMC/AQM/pull/40
 https://github.com/NOAA-EMC/MOM6/pull/107
-FV3 PR missing!
+https://github.com/NOAA-GFDL/GFDL_atmos_cubed_sphere/pull/231
+https://github.com/NOAA-EMC/fv3atm/pull/620
 https://github.com/ufs-community/ufs-weather-model/pull/1504
