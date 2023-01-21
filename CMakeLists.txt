@@ -44,7 +44,7 @@ ecbuild_bundle( PROJECT fckit GIT "https://github.com/ecmwf/fckit.git" TAG 0.9.5
 ecbuild_bundle( PROJECT atlas GIT "https://github.com/ecmwf/atlas.git" TAG 0.30.0 )
 
 # External FMS
-find_package(FMS 2022.01 REQUIRED COMPONENTS R4 R8)
+find_package(FMS 2022.04 REQUIRED COMPONENTS R4 R8)
 
 if(UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES "^(NG-GODAS)$")
   ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git" TAG 1a02ebaf6f7a4e9f2c2d2dd973fb050e697bcc74 )  # develop on nov 15
@@ -83,7 +83,7 @@ find_package(OpenMP REQUIRED)
 if(APPLE)
   set(UFS_CMAKE_EXE_LINKER_FLAGS "${UFS_CMAKE_EXE_LINKER_FLAGS} ${OpenMP_libomp_LIBRARY} ${OpenMP_libomp_LIBRARY}")
 endif()
-message (SATUS "UFS_CMAKE_EXE_LINKER_FLAGS: ${UFS_CMAKE_EXE_LINKER_FLAGS}")
+message (STATUS "UFS_CMAKE_EXE_LINKER_FLAGS: ${UFS_CMAKE_EXE_LINKER_FLAGS}")
 
 ExternalProject_Add(ufs-weather-model
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
