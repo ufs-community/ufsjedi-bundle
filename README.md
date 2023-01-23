@@ -77,7 +77,23 @@ Test project /Users/heinzell/work/ufs-bundle/20221114/build-debug-atm
 ```
 The ctest for NG-GODAS is called `test_soca_forecast_ufs`. Note that there is no test to download the data, this is currently hardcoded in the `soca` top-level `CMakeLists.txt` file.
 ```
-MISSING
+ctest -R _ufs 2>&1 | tee log.ctest.ufs
+Test project /Users/heinzell/work/ufs-bundle/20221114/build-debug-ng-godas
+    Start 1094: test_soca_forecast_ufs
+1/1 Test #1094: test_soca_forecast_ufs ...........***Failed   11.51 sec
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+mpi       =  11.51 sec*proc (1 test)
+script    =  11.51 sec*proc (1 test)
+soca      =  11.51 sec*proc (1 test)
+
+Total Test time (real) =  13.28 sec
+
+The following tests FAILED:
+	1094 - test_soca_forecast_ufs (Failed)
+Errors while running CTest
 ```
 Note for later for running on Hera: need to add `-DMPIEXEC_EXECUTABLE="/apps/slurm/default/bin/srun" -DMPIEXEC_NUMPROC_FLAG="-n"` to `ecbuild` command, then run `ctest -R get_` on login node, then acquire a compute node, for example via `salloc -N 1 -n 24 --time=480 --qos=batch -A da-cpu -I`, then run the actual `ctests` on the compute node.
 
