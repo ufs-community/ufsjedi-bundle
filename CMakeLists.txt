@@ -54,6 +54,7 @@ endif()
 # ----------------------
 ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  TAG c308945cbc6db4d6add0dac3581bbc4d457e8785 )  # develop on nov 15
 ecbuild_bundle( PROJECT vader GIT "https://github.com/jcsda-internal/vader.git" TAG 3363fe28ba65a61227ec1d64504d2641730f51a4 )  # develop on nov 15
+# Note that the saber PR was already merged into develop, but we can't just update to the head of develop while keep the other JEDI repos fixed
 ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda-internal/saber.git" BRANCH bugfix/add_missing_netcdf_dependency_to_build_system )  # updated from develop on nov 15
 ecbuild_bundle( PROJECT ioda  GIT "https://github.com/jcsda-internal/ioda.git"  TAG 876e7874fc917376500822157cda82c15ede02f8 )  # develop on nov 15
 ecbuild_bundle( PROJECT ufo   GIT "https://github.com/jcsda-internal/ufo.git"   TAG f95dd253a850debd1f1b391ec63a47f99c341efa )  # develop on nov 15
