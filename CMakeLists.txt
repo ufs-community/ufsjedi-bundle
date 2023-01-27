@@ -137,7 +137,7 @@ else()
 endif()
 
 
-# ioda, ufo, fv3-jedi and saber test data
+# ioda, ufo and fv3-jedi test data
 #----------------------------------------
 
 # If IODA branch is being built set GIT_BRANCH_FUNC to IODA's current branch.
@@ -175,16 +175,6 @@ endif()
 
 # If fv3-jedi's current branch is available in fv3-jedi-data repo, that branch will be checked out
 branch_checkout (REPO_DIR_NAME fv3-jedi-data
-                 BRANCH ${GIT_BRANCH_FUNC} )
-
-# same procedure for saber-data
-find_branch_name(REPO_DIR_NAME saber)
-if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
-  ecbuild_bundle( PROJECT saber-data GIT "https://github.com/JCSDA-internal/saber-data.git" TAG 16da933fe4434f73fa51c000db787061d25dcedf )  # develop on nov 15
-endif()
-
-# If saber's current branch is available in saber-data repo, that branch will be checked out
-branch_checkout (REPO_DIR_NAME saber-data
                  BRANCH ${GIT_BRANCH_FUNC} )
 
 # Build Doxygen documentation
