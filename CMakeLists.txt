@@ -52,7 +52,7 @@ endif()
 
 # Core JEDI repositories
 # ----------------------
-ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  TAG e7335ffba1fa883ff19759634b7edf1ccd25fe80 ) # develop on jan 28
+ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH feature/ufs_fix_netcdf_c_dependencies ) # based on TAG e7335ffba1fa883ff19759634b7edf1ccd25fe80, which is develop on jan 28
 ecbuild_bundle( PROJECT vader GIT "https://github.com/jcsda-internal/vader.git" TAG 3c8fc58ed67c013a955ca7d8f8d2346f2844ac96 ) # develop on jan 28
 ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda-internal/saber.git" TAG 1203356523b123654a8871846a55a06ed26b7247 ) # develop on jan 28
 ecbuild_bundle( PROJECT ioda  GIT "https://github.com/jcsda-internal/ioda.git"  TAG 39ab4dd1dfe737f71385af802c2b5c67c2ef8efc ) # develop on jan 28
