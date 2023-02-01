@@ -47,17 +47,16 @@ ecbuild_bundle( PROJECT atlas GIT "https://github.com/ecmwf/atlas.git" TAG 0.31.
 find_package(FMS 2022.04 REQUIRED COMPONENTS R4 R8)
 
 if(UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES "^(NG-GODAS)$")
-  ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git" TAG 1a02ebaf6f7a4e9f2c2d2dd973fb050e697bcc74 )  # develop on nov 15
+  ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git" TAG 1a02ebaf6f7a4e9f2c2d2dd973fb050e697bcc74 )  # develop on jan 28
 endif()
 
 # Core JEDI repositories
 # ----------------------
-ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  TAG c308945cbc6db4d6add0dac3581bbc4d457e8785 )  # develop on nov 15
-ecbuild_bundle( PROJECT vader GIT "https://github.com/jcsda-internal/vader.git" TAG 3363fe28ba65a61227ec1d64504d2641730f51a4 )  # develop on nov 15
-# Note that the saber PR was already merged into develop, but we can't just update to the head of develop while keep the other JEDI repos fixed
-ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda-internal/saber.git" BRANCH bugfix/add_missing_netcdf_dependency_to_build_system )  # updated from develop on nov 15
-ecbuild_bundle( PROJECT ioda  GIT "https://github.com/jcsda-internal/ioda.git"  TAG 876e7874fc917376500822157cda82c15ede02f8 )  # develop on nov 15
-ecbuild_bundle( PROJECT ufo   GIT "https://github.com/jcsda-internal/ufo.git"   TAG f95dd253a850debd1f1b391ec63a47f99c341efa )  # develop on nov 15
+ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  TAG 0932772f4b20b0defedfb12e31a0c17c18caac71 ) # develop on feb 1
+ecbuild_bundle( PROJECT vader GIT "https://github.com/jcsda-internal/vader.git" TAG 3c8fc58ed67c013a955ca7d8f8d2346f2844ac96 ) # develop on jan 28
+ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda-internal/saber.git" TAG 1203356523b123654a8871846a55a06ed26b7247 ) # develop on jan 28
+ecbuild_bundle( PROJECT ioda  GIT "https://github.com/jcsda-internal/ioda.git"  TAG 39ab4dd1dfe737f71385af802c2b5c67c2ef8efc ) # develop on jan 28
+ecbuild_bundle( PROJECT ufo   GIT "https://github.com/jcsda-internal/ufo.git"   TAG ab106a84c770414a3edf9dacabeadea5d70d9edf ) # develop on jan 28
 
 # Options for building with certain models
 # ----------------------------------------
@@ -71,7 +70,7 @@ set(FV3_FORECAST_MODEL "UFS")
 
 # fv3-jedi linear model
 # ---------------------
-ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH feature/ufs_dom )  # updated from develop on nov 22
+ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH feature/ufs_dom )  # updated from develop on nov 22, develop hasn't changed by jan 28
 
 include_directories(${DEPEND_LIB_ROOT}/include_r8)
 link_directories(${DEPEND_LIB_ROOT}/lib)
@@ -123,15 +122,15 @@ if(UFS_APP MATCHES "^(S2S)$")
   # fv3-jedi and associated repositories
   # ------------------------------------
   ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.2.0 )
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs_dom )  # updated from develop on nov 15
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git"     BRANCH feature/ufs_dom )  # was NOT updated on nov 15th
+  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs_dom )  # updated from develop on jan28
+  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git"     BRANCH feature/ufs_dom )  # updated from develop on jan28
   add_dependencies(soca ufs-weather-model)
 elseif(UFS_APP MATCHES "^(NG-GODAS)$")
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_dom )  # was NOT updated on nov 15th
+  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_dom )  # updated from develop on jan28
   add_dependencies(soca ufs-weather-model)
 elseif(UFS_APP MATCHES "^(ATM)$")
   ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.2.0 )
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs_dom )  # updated from develop on nov 15
+  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs_dom )  # updated from develop on jan28
 else()
   message(FATAL_ERROR "ufs-bundle unknown UFS_APP ${UFS_APP}")
 endif()
@@ -150,7 +149,7 @@ find_branch_name(REPO_DIR_NAME ioda)
 # When LOCAL_PATH_JEDI_TESTFILES is set to the directory of IODA test files stored
 # in a local directory, ioda-data repo will not be cloned
 if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
-  ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/JCSDA-internal/ioda-data.git" TAG 2d9fb746b26a306711800960f471cb2ddc56c15c )  # develop on nov 22
+  ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/JCSDA-internal/ioda-data.git" TAG 3b4c1ba80a7cb9ae132d74c715492eae36d9d87f ) # develop on jan 28
 endif()
 
 # If IODA's current branch is available in ioda-data repo, that branch will be checked out
@@ -160,7 +159,7 @@ branch_checkout (REPO_DIR_NAME ioda-data
 # same procedure for ufo-data
 find_branch_name(REPO_DIR_NAME ufo)
 if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
-  ecbuild_bundle( PROJECT ufo-data GIT "https://github.com/JCSDA-internal/ufo-data.git" TAG 998ac3b375248b850ca38ea05749b37a411dac4d )  # develop on nov 15
+  ecbuild_bundle( PROJECT ufo-data GIT "https://github.com/JCSDA-internal/ufo-data.git" TAG 87702a24ac6349495e9182d5ee833b488fb1f2fb ) # develop on jan 28
 endif()
 
 # If UFO's current branch is available in ufo-data repo, that branch will be checked out
@@ -170,7 +169,7 @@ branch_checkout (REPO_DIR_NAME ufo-data
 # same procedure for fv3-jedi-data
 find_branch_name(REPO_DIR_NAME fv3-jedi)
 if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
-  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/ufs_dom )  # updated from develop on nov 15
+  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/ufs_dom ) # updated from develop on jan 28
 endif()
 
 # If fv3-jedi's current branch is available in fv3-jedi-data repo, that branch will be checked out
