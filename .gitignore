@@ -29,6 +29,8 @@ ioda/
 oops/
 ufo/
 ewok/
+soca/
+vader/
 
 # FMS
 fms/
@@ -41,6 +43,7 @@ fv3/
 femps/
 fv3-jedi-lm/
 fv3-jedi/
+ufs-weather-model/
 
 # Observation operators
 crtm/
