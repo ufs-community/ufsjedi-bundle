@@ -54,9 +54,9 @@ configured with S2S coupling. Only the first two configurations have test cases 
 The parameter for specifying the configuration type is `-DAPP=[ATM|NG-GODAS|S2S]` on the ecbuild configuration line. Create a build directory under/outside `ufs-bundle` and `cd` to it. Then run one of the following `ecbuild` commands:
 ```
 ecbuild --build=debug -DUFS_APP=ATM .. 2>&1 | tee log.ecbuild
+ecbuild --build=debug -DUFS_APP=ATMAERO .. 2>&1 | tee log.ecbuild
 ecbuild --build=debug -DUFS_APP=NG-GODAS .. 2>&1 | tee log.ecbuild
-# Note - not yet tested on macOS with spack-stack
-#ecbuild --build=debug -DUFS_APP=S2S .. 2>&1 | tee log.ecbuild
+ecbuild --build=debug -DUFS_APP=S2S .. 2>&1 | tee log.ecbuild
 ```
 On macOS, it may be required to pass `-DCMAKE_EXE_LINKER_FLAGS="-Wl,-no_compact_unwind"` to the ecbuild command,. Further, if using the native Apple `clang` compiler with `llvm-openmp` installed via homebrew or spack, it may be necessary to add `-DCMAKE_SHARED_LINKER_FLAGS="/path/to/llvm-openmp-x.y.z/lib/libomp.dylib"` to the ecbuild command.
 
@@ -83,6 +83,7 @@ Test project /Users/heinzell/work/ufs-bundle/20221114/build-debug-atm-20230121-w
 
 67% tests passed, 2 tests failed out of 6
 ```
+
 The ctest for NG-GODAS is called `test_soca_forecast_ufs`. Note that there is no test to download the data, this is currently hardcoded in the `soca` top-level `CMakeLists.txt` file.
 ```
 ctest -R _ufs 2>&1 | tee log.ctest.ufs
@@ -103,4 +104,7 @@ The following tests FAILED:
 	1094 - test_soca_forecast_ufs (Failed)
 Errors while running CTest
 ```
+
+At this point, there are no ctests for ATMAERO or S2S.
+
 Note for later for running on Hera: need to add `-DMPIEXEC_EXECUTABLE="/apps/slurm/default/bin/srun" -DMPIEXEC_NUMPROC_FLAG="-n"` to `ecbuild` command, then run `ctest -R get_` on login node, then acquire a compute node, for example via `salloc -N 1 -n 24 --time=480 --qos=batch -A da-cpu -I`, then run the actual `ctests` on the compute node.
