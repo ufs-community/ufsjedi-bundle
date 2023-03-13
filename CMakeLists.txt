@@ -93,8 +93,7 @@ ExternalProject_Add(ufs-weather-model
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
   GIT_REPOSITORY https://github.com/climbfuji/ufs-weather-model
   GIT_SUBMODULES_RECURSE TRUE
-  GIT_TAG feature/consolidate_dom_update_20230306  # updated from develop on Mar 6
-  #GIT_TAG feature/consolidate_dom_update_20230117  # updated from develop on Jan 17
+  GIT_TAG feature/consolidate_dom_update_20221114  # updated from develop on Mar 6
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model
   UPDATE_DISCONNECTED ON
   INSTALL_DIR ${DEPEND_LIB_ROOT}
