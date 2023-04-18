@@ -48,15 +48,19 @@ ecbuild_bundle( PROJECT atlas GIT "https://github.com/ecmwf/atlas.git" TAG 0.32.
 # External FMS
 find_package(FMS 2022.04 REQUIRED COMPONENTS R4 R8)
 
-if(UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES "^(NG-GODAS)$")
-  ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git" TAG 1a02ebaf6f7a4e9f2c2d2dd973fb050e697bcc74 )  # develop on apr 18
-endif()
-
 # Core JEDI repositories
 # ----------------------
 ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  TAG 3318acc4b527e49fcc2e2d78549a06fc4ab43dd0 ) # develop on apr 18
 ecbuild_bundle( PROJECT vader GIT "https://github.com/jcsda-internal/vader.git" TAG c5e0c1a8d4feeedacfef788f7670511e4db41d5d ) # develop on apr 18
 ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda-internal/saber.git" TAG fc8992d7c6634c384f2f61eb121743ab8ede0d6a ) # develop on apr 18
+
+
+if(UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES "^(NG-GODAS)$")
+  ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git" TAG 1a02ebaf6f7a4e9f2c2d2dd973fb050e697bcc74 )  # develop on apr 18
+endif()
+
+ecbuild_bundle( PROJECT crtm  GIT "https://github.com/jcsda-internal/crtm.git"  TAG v2.4-jedi.2 )
+
 ecbuild_bundle( PROJECT ioda  GIT "https://github.com/jcsda-internal/ioda.git"  TAG fb651c65332692472ea490d72a85ed6a63e8650f ) # develop on apr 18
 ecbuild_bundle( PROJECT ufo   GIT "https://github.com/jcsda-internal/ufo.git"   TAG 3bb109889ab5a01938d189a243660ac52fc9a39b ) # develop on apr 18
 
