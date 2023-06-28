@@ -157,11 +157,11 @@ if(UFS_APP MATCHES "^(S2S)$")
   # fv3-jedi and associated repositories
   # ------------------------------------
   ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.2.0 )
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs_dom )  # updated from develop on apr 18
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git"     BRANCH feature/ufs_dom )  # updated from develop on apr 18
+  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/dev_june_13 )
+  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git"     BRANCH feature/dev_june_13 )
   add_dependencies(soca ufs-weather-model)
 elseif(UFS_APP MATCHES "^(NG-GODAS)$")
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_dom )  # updated from develop on apr 18
+  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/dev_june_13 ) 
   add_dependencies(soca ufs-weather-model)
 elseif(UFS_APP MATCHES "^(ATM)$" OR UFS_APP MATCHES "^(ATMAERO)$")
   ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.2.0 )
@@ -204,7 +204,7 @@ branch_checkout (REPO_DIR_NAME ufo-data
 # same procedure for fv3-jedi-data
 find_branch_name(REPO_DIR_NAME fv3-jedi)
 if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
-  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/dev_june_13) # updated from develop on apr 18
+  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/dev_june_13)
 endif()
 
 # If fv3-jedi's current branch is available in fv3-jedi-data repo, that branch will be checked out
