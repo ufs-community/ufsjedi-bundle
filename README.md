@@ -31,12 +31,12 @@ Currently Loaded Modules:
  20) parallel-netcdf/1.12.2    41) ecbuild/3.7.2            62) netcdf-cxx4/4.3.1  83) py-pandas/1.4.0             104) jedi-ufs-env/unified-dev
  21) parallelio/2.5.9          42) openjpeg/2.3.1           63) json/3.10.5        84) py-pybind11/2.8.1           105) fms@2023.01
 ```
-On a pre-configured platform that has spack-stack-1.4.1 installed, load the spack-stack modules as described in https://spack-stack.readthedocs.io/en/1.4.1 followed by `module load jedi-ufs-env`. On a configurable (user) platform, follow the instructions in https://spack-stack.readthedocs.io/en/1.4.1 to build the `skylab-dev` or `unified-dev` environment, then run (use the appropriate path, compiler/mpi/python versions for your system):
+On a pre-configured platform that has spack-stack-1.4.1 (or 1.4.0) installed, load the spack-stack modules as described in https://spack-stack.readthedocs.io/en/1.4.1 (https://spack-stack.readthedocs.io/en/1.4.0), followed by `module load jedi-ufs-env`. On a configurable (user) platform, follow the instructions in https://spack-stack.readthedocs.io/en/1.4.1 to build the `skylab-dev` or `unified-dev` environment, then run (use the appropriate path, compiler/mpi/python versions for your system):
 ```
 module use /Users/heinzell/prod/spack-stack-v1/envs/unified-dev/install/modulefiles/Core
 module load stack-apple-clang/13.1.6
-module load stack-openmpi/4.1.4
-module load stack-python/3.9.13
+module load stack-openmpi/4.1.5
+module load stack-python/3.10.8
 module load jedi-ufs-env/unified-dev
 ```
 Further, for testing of the newest `fms@2023.02-beta1` tag, verify if the platform you are on has this version available and if yes, run
