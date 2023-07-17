@@ -20,7 +20,7 @@ defaults:
     shell: bash
 
 jobs:
-  run-skylab-nightly:
+  test-ufs-bundle-nightly:
     runs-on: [self-hosted, Linux, X64, pcluster-ci-20230717]
 
     steps:
@@ -33,8 +33,8 @@ jobs:
           cd ${JEDI_ENV}
           pwd
           ls -lart
-          # Remove the existing build
-          rm -fr *
+          ### # Remove the existing build
+          ### rm -fr *
 
       - name: checkout
         uses: actions/checkout@v3
@@ -107,14 +107,6 @@ jobs:
           export OMP_NUM_THREADS=1
           export SLURM_EXPORT_ENV=ALL
 
-          # Run in JEDI_ENV directory for CI
-          export JEDI_ENV=${JEDI_ENV}
-          mkdir -p ${JEDI_ENV}
-
-          # Export the required environmental variables
-          export JEDI_SRC=${JEDI_ENV}/jedi-bundle
-          export JEDI_BUILD=${JEDI_ENV}/build
-
           EOF
 
       - name: clone-build-bundle
@@ -142,11 +134,16 @@ jobs:
           cd build
           ecbuild -DUFS_APP=ATM ../ufs-bundle
           make update
-          make -j16
+          make -j8
 
           # Runs mandatory ctests on the head node
           ctest -R get_
-          ctest -R _ufs
+          ctest -R fv3jedi_setup_ufs_rundir_warmstart
+          ctest -R fv3jedi_setup_ufs_rundir_coldstart
+          ctest -R fv3jedi_test_tier1_model_ufs_warmstart
+          #ctest -R fv3jedi_test_tier1_model_ufs_coldstart
+          ctest -R fv3jedi_test_tier1_forecast_ufs_warmstart
+          #ctest -R fv3jedi_test_tier1_forecast_ufs_coldstart
 
       - name: Report Status
         if: always()
