@@ -80,6 +80,11 @@ The first identifier to the library itself must either contain `@rpath/` and the
 ```
 install_name_tool -id ${parallelio_ROOT}/lib/libpioc.dylib ${parallelio_ROOT}/lib/libpioc.dylib
 ```
+A similar fix may be needed for `libpiof.dylib`, depending the `UFS_APP`:
+```
+install_name_tool -id ${parallelio_ROOT}/lib/libpiof.dylib ${parallelio_ROOT}/lib/libpiof.dylib
+install_name_tool -change libpioc.dylib ${parallelio_ROOT}/lib/libpioc.dylib ${parallelio_ROOT}/lib/libpiof.dylib
+```
 
 While building with soca (NG-GODAS or S2S), there will be a long pause during configuration when `ecbuild` is downloading the input files for the test to be run.
 
