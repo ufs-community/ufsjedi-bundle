@@ -55,7 +55,7 @@ if(UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES
   ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git" BRANCH develop UPDATE )
 endif()
 
-ecbuild_bundle( PROJECT crtm  GIT "https://github.com/jcsda-internal/crtm.git"  TAG v2.4.1-jedi )
+ecbuild_bundle( PROJECT crtm GIT "https://github.com/JCSDA/CRTMv3.git" BRANCH develop UPDATE )
 
 ecbuild_bundle( PROJECT ioda  GIT "https://github.com/jcsda-internal/ioda.git" BRANCH develop UPDATE )
 ecbuild_bundle( PROJECT ufo   GIT "https://github.com/jcsda-internal/ufo.git" BRANCH develop UPDATE )
