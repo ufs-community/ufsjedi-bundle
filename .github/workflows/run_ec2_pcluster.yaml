@@ -39,36 +39,39 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
-      # Either this worked, or manually running the docker build as user ubuntu from
-      # the ravsamhq/notify-slack-action@v1 action below
-      - name: ubuntu-docker
-        run: |
-          echo "Checking if user ubuntu can run docker"
-          if id -nG ubuntu | grep -qw docker; then
-            echo "User ubuntu already belongs to group docker"
-          else
-            echo "Adding user ubuntu to group docker"
-            sudo gpasswd -a ubuntu docker
-            newgrp docker
-            docker run hello-world
-          fi
-
-      - name: set-credentials
-        env:
-          GH_USERNAME: ${{ secrets.JCSDABOT_USERNAME }}
-          GH_TOKEN: ${{ secrets.JCSDABOT_TOKEN }}
-        run: |
-          # git config and credentials
-          git config --global user.name "Luke Skywalker"
-          git config --global user.email "luke@skywalker.org"
-          git config --global credential.helper store
-          touch ~/.git-credentials
-          chmod 0700 ~/.git-credentials
-          echo "https://$GH_USERNAME:$GH_TOKEN@github.com" > ~/.git-credentials
+      # DH* Skip all this, since Skylab CI runs on same system and does that already
+      #
+      ## Either this worked, or manually running the docker build as user ubuntu from
+      ## the ravsamhq/notify-slack-action@v1 action below
+      #- name: ubuntu-docker
+      #  run: |
+      #    echo "Checking if user ubuntu can run docker"
+      #    if id -nG ubuntu | grep -qw docker; then
+      #      echo "User ubuntu already belongs to group docker"
+      #    else
+      #      echo "Adding user ubuntu to group docker"
+      #      sudo gpasswd -a ubuntu docker
+      #      newgrp docker
+      #      docker run hello-world
+      #    fi
+      #
+      #- name: set-credentials
+      #  env:
+      #    GH_USERNAME: ${{ secrets.JCSDABOT_USERNAME }}
+      #    GH_TOKEN: ${{ secrets.JCSDABOT_TOKEN }}
+      #  run: |
+      #    # git config and credentials
+      #    git config --global user.name "Luke Skywalker"
+      #    git config --global user.email "luke@skywalker.org"
+      #    git config --global credential.helper store
+      #    touch ~/.git-credentials
+      #    chmod 0700 ~/.git-credentials
+      #    echo "https://$GH_USERNAME:$GH_TOKEN@github.com" > ~/.git-credentials
+      # *DH
 
       - name: create-env-setup-script
         env:
-          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi-run
+          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
         run: |
           # In run directory
           cd ${JEDI_ENV}
@@ -116,7 +119,7 @@ jobs:
 
       - name: clone-build-bundle
         env:
-          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi-run
+          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
         run: |
           # In run directory
           cd ${JEDI_ENV}
