@@ -1,5 +1,5 @@
 
-name: test-ufs-bundle-pcluster-nightly
+name: test-ufs-bundle-pcluster
 
 # Controls when the workflow will run
 on:
@@ -20,7 +20,7 @@ defaults:
     shell: bash
 
 jobs:
-  test-ufs-bundle-nightly:
+  test-ufs-bundle:
     runs-on: [self-hosted, Linux, X64, pcluster-ci-20230717]
 
     steps:
@@ -158,7 +158,7 @@ jobs:
           notify_when: 'success,failure,warnings'
           notification_title: '{workflow} has {status_message}'
           message_format: '{emoji} *{workflow}* {status_message} for branch {branch} in <{repo_url}|{repo}>'
-          footer: 'scheduled nightly workflow'
+          #footer: 'scheduled nightly workflow'
           # For testing: only notify user Dom
           mention_users: 'U02NLGXF5HV'
           mention_users_when: 'failure,warnings'
