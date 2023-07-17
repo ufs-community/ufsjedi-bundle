@@ -25,16 +25,16 @@ jobs:
 
     steps:
       - name: cleanup
+        if: ${{ github.event_name == 'schedule' }}
         env:
           JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
         run: |
-          # Prepare run directory
+          # Remove and prepare run directory
+          rm -fr ${JEDI_ENV}
           mkdir -p ${JEDI_ENV}
           cd ${JEDI_ENV}
           pwd
           ls -lart
-          ### # Remove the existing build
-          ### rm -fr *
 
       - name: checkout
         uses: actions/checkout@v3
