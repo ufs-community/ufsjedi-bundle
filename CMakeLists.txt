@@ -100,10 +100,7 @@ ExternalProject_Add(ufs-weather-model
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
   GIT_REPOSITORY https://github.com/climbfuji/ufs-weather-model
   GIT_SUBMODULES_RECURSE TRUE
-  # DH* 20230717 TODO MERGE BACK INTO 20221114 and update date tag
-  #GIT_TAG feature/consolidate_dom_update_20221114  # updated from develop on Mar 6
-  GIT_TAG feature/consolidate_dom_update_20230717  # updated from develop on 2023/07/17
-  # *DH 20230717
+  GIT_TAG feature/consolidate_dom_update_20221114  # updated from develop on 2023/07/17
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model
   UPDATE_DISCONNECTED ON
   INSTALL_DIR ${DEPEND_LIB_ROOT}
@@ -207,7 +204,9 @@ branch_checkout (REPO_DIR_NAME ufo-data
 # same procedure for fv3-jedi-data
 find_branch_name(REPO_DIR_NAME fv3-jedi)
 if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
+  # DH* 20230718 revert this to feature/ufs_dom once https://github.com/JCSDA-internal/fv3-jedi-data/pull/78 is merged
   ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/ufs_dom_update_ufswm_20230717 )
+  # *DH 20230718
 endif()
 
 # If fv3-jedi's current branch is available in fv3-jedi-data repo, that branch will be checked out
