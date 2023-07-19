@@ -1,0 +1,195 @@
+
+name: test-ufs-bundle-pcluster
+
+# Controls when the workflow will run
+on:
+  schedule:
+    - cron: '0 4 * * *'
+  pull_request:
+    # pull request to develop
+    branches: [develop]
+  workflow_dispatch:
+    inputs:
+      ufs-bundle-branch:
+        description: 'The ufs-bundle branch to use. Default is "develop"'
+        required: true
+        default: 'develop'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test-ufs-bundle:
+    runs-on: [self-hosted, Linux, X64, pcluster-ci-20230717]
+
+    steps:
+      - name: cleanup
+        if: ${{ github.event_name == 'schedule' }}
+        env:
+          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
+        run: |
+          # Remove and prepare run directory
+          rm -fr ${JEDI_ENV}
+          mkdir -p ${JEDI_ENV}
+          cd ${JEDI_ENV}
+          pwd
+          ls -lart
+
+      - name: checkout
+        uses: actions/checkout@v3
+
+      # DH* Skip all this, since Skylab CI runs on same system and does that already
+      #
+      ## Either this worked, or manually running the docker build as user ubuntu from
+      ## the ravsamhq/notify-slack-action@v1 action below
+      #- name: ubuntu-docker
+      #  run: |
+      #    echo "Checking if user ubuntu can run docker"
+      #    if id -nG ubuntu | grep -qw docker; then
+      #      echo "User ubuntu already belongs to group docker"
+      #    else
+      #      echo "Adding user ubuntu to group docker"
+      #      sudo gpasswd -a ubuntu docker
+      #      newgrp docker
+      #      docker run hello-world
+      #    fi
+      #
+      #- name: set-credentials
+      #  env:
+      #    GH_USERNAME: ${{ secrets.JCSDABOT_USERNAME }}
+      #    GH_TOKEN: ${{ secrets.JCSDABOT_TOKEN }}
+      #  run: |
+      #    # git config and credentials
+      #    git config --global user.name "Luke Skywalker"
+      #    git config --global user.email "luke@skywalker.org"
+      #    git config --global credential.helper store
+      #    touch ~/.git-credentials
+      #    chmod 0700 ~/.git-credentials
+      #    echo "https://$GH_USERNAME:$GH_TOKEN@github.com" > ~/.git-credentials
+      # *DH
+
+      - name: create-env-setup-script
+        env:
+          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
+        run: |
+          # In run directory
+          cd ${JEDI_ENV}
+
+          cat <<EOF > setup.sh
+          #!/bin/bash
+
+          echo "Loading ufs-bundle environment using spack-stack-1.4.0"
+
+          ulimit -s unlimited
+          ulimit -c unlimited
+
+          source /etc/profile.d/z00_lmod.sh
+          source /etc/profile.d/z01_lmod.sh
+
+          source /opt/intel/oneapi/compiler/2022.1.0/env/vars.sh
+
+          module use /mnt/experiments-efs/skylab-v5/spack-stack-1.4.0/envs/unified-env-v2/install/modulefiles/Core
+          module load stack-intel/2022.1.0
+          module load stack-intel-oneapi-mpi/2021.6.0
+          module load stack-python/3.10.8
+
+          module load jedi-ufs-env/unified-dev
+          module unload crtm
+
+          module li
+
+          export I_MPI_DEBUG=5
+          export I_MPI_FABRICS=shm
+          export I_MPI_PIN_DOMAIN=omp
+          export KMP_AFFINITY=compact
+          export KMP_STACKSIZE=2048m
+          export OMP_NUM_THREADS=1
+          export SLURM_EXPORT_ENV=ALL
+
+          EOF
+
+      - name: clone-build-bundle
+        env:
+          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
+        run: |
+          # In run directory
+          cd ${JEDI_ENV}
+
+          # Set environment
+          source setup.sh
+
+          echo "Using branch ${{ inputs.ufs-bundle-branch || 'develop' }} for ufs-bundle"
+          if [ -d ufs-bundle ] ; then
+            echo "Update existing copy of ufs-bundle"
+            cd ufs-bundle
+            git remote update
+            git checkout origin/${{ inputs.ufs-bundle-branch || 'develop' }}
+            cd ..
+          else
+            echo "Check out a fresh copy of ufs-bundle"
+            git clone -b ${{ inputs.ufs-bundle-branch || 'develop' }} https://github.com/jcsda/ufs-bundle
+          fi
+
+          # UFS_APP=ATM
+          cd ${JEDI_ENV}
+          mkdir -p build-atm
+          cd build-atm
+          ecbuild -DUFS_APP=ATM ../ufs-bundle
+          make update
+          make -j8
+
+          # Runs mandatory ctests on the head node
+          ctest -R get_
+          ctest -R fv3jedi_setup_ufs_rundir_warmstart
+          ctest -R fv3jedi_setup_ufs_rundir_coldstart
+          ctest -R fv3jedi_test_tier1_model_ufs_warmstart
+          #ctest -R fv3jedi_test_tier1_model_ufs_coldstart
+          ctest -R fv3jedi_test_tier1_forecast_ufs_warmstart
+          #ctest -R fv3jedi_test_tier1_forecast_ufs_coldstart
+
+          # UFS_APP=ATMAERO
+          cd ${JEDI_ENV}
+          mkdir -p build-atmaero
+          cd build-atmaero
+          ecbuild -DUFS_APP=ATMAERO ../ufs-bundle
+          make update
+          make -j8
+
+          # Skip those for now - linker errors because of static/dynamic library mix
+          ## UFS_APP=NG-GODAS
+          #cd ${JEDI_ENV}
+          #mkdir -p build-ng-godas
+          #cd build-ng-godas
+          #ecbuild -DUFS_APP=NG-GODAS ../ufs-bundle
+          #make update
+          #make -j8
+          #
+          ## UFS_APP=S2S
+          #cd ${JEDI_ENV}
+          #mkdir -p build-s2s
+          #cd build-s2s
+          #ecbuild -DUFS_APP=S2S ../ufs-bundle
+          #make update
+          #make -j8
+
+      - name: Report Status
+        if: always()
+        uses: ravsamhq/notify-slack-action@v1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
+        with:
+          # https://www.ravsam.in/blog/send-slack-notification-when-github-actions-fails/#getting-a-webhook-url
+          # https://www.ravsam.in/blog/collect-form-responses-using-google-apps-script
+          # https://github.com/marketplace/actions/notify-slack-action
+          status: ${{ job.status }}
+          notify_when: 'success,failure,warnings'
+          notification_title: '{workflow} has {status_message}'
+          message_format: '{emoji} *{workflow}* {status_message} for branch {branch} in <{repo_url}|{repo}>'
+          footer: ${{ github.event.pull_request.number || github.event_name || 'workflow dispatched manually' }}
+          # For testing: only notify user Dom
+          mention_users: 'U02NLGXF5HV'
+          mention_users_when: 'failure,warnings'
+          ## Default: notify channel
+          #mention_groups: '!channel'
+          #mention_groups_when: 'failure,warnings'
