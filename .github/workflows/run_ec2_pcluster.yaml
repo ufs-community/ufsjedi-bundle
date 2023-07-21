@@ -9,11 +9,6 @@ on:
     # pull request to develop
     branches: [develop]
   workflow_dispatch:
-    inputs:
-      ufs-bundle-branch:
-        description: 'The ufs-bundle branch to use. Default is "develop"'
-        required: true
-        default: 'develop'
 
 defaults:
   run:
