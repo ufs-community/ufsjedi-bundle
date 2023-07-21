@@ -112,6 +112,7 @@ jobs:
       - name: clone-build-bundle
         env:
           JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
+          UFS_BUNDLE_BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
         run: |
           # In run directory
           cd ${JEDI_ENV}
@@ -119,16 +120,16 @@ jobs:
           # Set environment
           source setup.sh
 
-          echo "Using branch ${{ inputs.ufs-bundle-branch || 'develop' }} for ufs-bundle"
+          echo "Using branch ${UFS_BUNDLE_BRANCH_NAME} for ufs-bundle"
           if [ -d ufs-bundle ] ; then
             echo "Update existing copy of ufs-bundle"
             cd ufs-bundle
             git remote update
-            git checkout origin/${{ inputs.ufs-bundle-branch || 'develop' }}
+            git checkout origin/${UFS_BUNDLE_BRANCH_NAME}
             cd ..
           else
             echo "Check out a fresh copy of ufs-bundle"
-            git clone -b ${{ inputs.ufs-bundle-branch || 'develop' }} https://github.com/jcsda/ufs-bundle
+            git clone -b ${UFS_BUNDLE_BRANCH_NAME} https://github.com/jcsda/ufs-bundle
           fi
 
           # UFS_APP=ATM
