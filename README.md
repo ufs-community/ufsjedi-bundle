@@ -9,40 +9,40 @@ This bundle requires the following spack-stack modules be loaded (all except `fm
 > module li
 
 Currently Loaded Modules:
-  1) stack-apple-clang/13.1.6  18) libpng/1.6.37            35) openjpeg/2.3.1    52) zstd/1.5.2                   69) py-eccodes/1.4.2          86) py-pyyaml/6.0
-  2) pmix/4.1.2                19) g2/3.4.5                 36) eccodes/2.27.0    53) tar/1.34                     70) py-f90nml/1.4.3           87) py-gast/0.5.3
-  3) zlib/1.2.13               20) g2tmpl/1.10.0            37) eigen/3.4.0       54) gettext/0.21.1               71) py-mpi4py/3.1.4           88) py-beniget/0.4.1
-  4) openmpi/4.1.4             21) sp/2.3.3                 38) openblas/0.3.19   55) libxpm/3.5.12                72) py-h5py/3.6.0             89) py-ply/3.11
-  5) stack-openmpi/4.1.4       22) ip/3.3.3                 39) eckit/1.20.2      56) libxaw/1.0.13                73) py-cftime/1.0.3.4         90) py-pythran/0.11.0
-  6) stack-python/3.9.13       23) cmake/3.23.1             40) fftw/3.3.10       57) udunits/2.2.28               74) py-netcdf4/1.5.3          91) py-scipy/1.8.0
-  7) bacio/2.4.1               24) git/2.36.0               41) fckit/0.9.5       58) ncview/2.1.8                 75) py-bottleneck/1.3.5       92) py-xarray/2022.3.0
-  8) curl/7.83.0               25) libbacktrace/2020-02-19  42) fiat/1.0.0        59) netcdf-cxx4/4.3.1            76) py-pyparsing/3.0.9        93) jedi-base-env/1.0.0
-  9) pkg-config/0.29.2         26) nccmp/1.9.0.1            43) ectrans/1.1.0     60) json/3.10.5                  77) py-packaging/21.3         94) gftl-shared/1.5.0
- 10) hdf5/1.12.1               27) parallelio/2.5.7         44) atlas/0.31.1      61) json-schema-validator/2.1.0  78) py-numexpr/2.8.3          95) yafyaml/0.5.1
- 11) parallel-netcdf/1.12.2    28) wget/1.21.3              45) gsibec/1.0.6      62) odc/1.4.5                    79) py-six/1.16.0             96) mapl/2.22.0-esmf-8.3.0b09-esmf-8.3.0
- 12) netcdf-c/4.8.1            29) base-env/1.0.0           46) gsl-lite/0.37.0   63) py-attrs/22.1.0              80) py-python-dateutil/2.8.2  97) w3nco/2.4.1
- 13) netcdf-fortran/4.5.4      30) boost/1.78.0             47) hdf/4.2.15        64) py-pycparser/2.21            81) py-pytz/2022.2.1          98) nemsio/2.5.2
- 14) esmf/8.3.0b09             31) bufr/11.7.1              48) jedi-cmake/1.4.0  65) py-cffi/1.15.0               82) py-pandas/1.4.0           99) sigio/2.3.2
- 15) llvm-openmp/14.0.6        32) git-lfs/3.1.4            49) libxt/1.1.5       66) py-findlibs/0.0.2            83) py-pybind11/2.8.1        100) w3emc/2.9.2
- 16) libjpeg/2.1.0             33) crtm/v2.4-jedi.2         50) libxmu/1.1.2      67) py-setuptools/59.4.0         84) py-pycodestyle/2.8.0     101) jedi-ufs-env/1.0.0
- 17) jasper/2.0.32             34) ecbuild/3.6.5            51) pigz/2.7          68) py-numpy/1.22.3              85) py-pyhdf/0.10.4          102) fms/2022.04
+  1) stack-apple-clang/13.1.6  22) esmf/8.4.2               43) eccodes/2.27.0     64) json-schema-validator/2.1.0  85) py-pycodestyle/2.8.0
+  2) pmix/4.2.3                23) llvm-openmp/16.0.0       44) eigen/3.4.0        65) odc/1.4.6                    86) py-pyhdf/0.10.4
+  3) zlib/1.2.13               24) libjpeg/2.1.0            45) openblas/0.3.19    66) py-attrs/22.2.0              87) libyaml/0.2.5
+  4) openmpi/4.1.5             25) jasper/2.0.32            46) eckit/1.23.1       67) py-pycparser/2.21            88) py-pyyaml/6.0
+  5) stack-openmpi/4.1.5       26) libpng/1.6.37            47) fftw/3.3.10        68) py-cffi/1.15.1               89) py-gast/0.5.3
+  6) pigz/2.7                  27) g2/3.4.5                 48) fckit/0.10.1       69) py-findlibs/0.0.2            90) py-beniget/0.4.1
+  7) zstd/1.5.2                28) g2tmpl/1.10.2            49) fiat/1.1.0         70) py-setuptools/59.4.0         91) py-ply/3.11
+  8) tar/1.34                  29) sp/2.3.3                 50) ectrans/1.2.0      71) py-numpy/1.22.3              92) py-pythran/0.12.2
+  9) gettext/0.21.1            30) ip/3.3.3                 51) atlas/0.33.0       72) py-eccodes/1.4.2             93) py-scipy/1.9.3
+ 10) libxcrypt/4.4.33          31) cmake/3.23.1             52) gsibec/1.1.2       73) py-f90nml/1.4.3              94) py-xarray/2022.3.0
+ 11) sqlite/3.40.1             32) git/2.36.0               53) gsl-lite/0.37.0    74) py-h5py/3.7.0                95) jedi-base-env/1.0.0
+ 12) python/3.10.8             33) libbacktrace/2020-02-19  54) hdf/4.2.15         75) py-cftime/1.0.3.4            96) gftl/1.8.3
+ 13) stack-python/3.10.8       34) nccmp/1.9.0.1            55) jedi-cmake/1.4.0   76) py-netcdf4/1.5.3             97) gftl-shared/1.5.0
+ 14) bacio/2.4.1               35) py-pip/23.0              56) libxt/1.1.5        77) py-bottleneck/1.3.5          98) yafyaml/0.5.1
+ 15) curl/8.0.1                36) wget/1.21.3              57) libxmu/1.1.2       78) py-packaging/23.0            99) mapl/2.35.2-esmf-8.4.2
+ 16) pkg-config/0.29.2         37) base-env/1.0.0           58) libxpm/3.5.12      79) py-numexpr/2.8.3            100) w3nco/2.4.1
+ 17) hdf5/1.14.0               38) boost/1.78.0             59) libxaw/1.0.13      80) py-six/1.16.0               101) nemsio/2.5.2
+ 18) netcdf-c/4.9.2            39) bufr/12.0.0              60) udunits/2.2.28     81) py-python-dateutil/2.8.2    102) sigio/2.3.2
+ 19) netcdf-fortran/4.6.0      40) git-lfs/3.1.4            61) ncview/2.1.8       82) py-pytz/2022.2.1            103) w3emc/2.9.2
+ 20) parallel-netcdf/1.12.2    41) ecbuild/3.7.2            62) netcdf-cxx4/4.3.1  83) py-pandas/1.4.0             104) jedi-ufs-env/unified-dev
+ 21) parallelio/2.5.9          42) openjpeg/2.3.1           63) json/3.10.5        84) py-pybind11/2.8.1           105) fms@2023.01
 ```
-On a pre-configured platform (including an AWS single-node/parallelcluster instance based on a spack-stack AMI), load the spack-stack modules for `skylab-3.0.0` as described in https://spack-stack.readthedocs.io/en/1.2.0 and https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.6.0, and run `module av` to see if `fms@2022.04` has already been installed. If yes, do
+On a pre-configured platform that has spack-stack-1.4.1 (or 1.4.0) installed, load the spack-stack modules as described in https://spack-stack.readthedocs.io/en/1.4.1 (https://spack-stack.readthedocs.io/en/1.4.0), followed by `module load jedi-ufs-env`. On a configurable (user) platform, follow the instructions in https://spack-stack.readthedocs.io/en/1.4.1 to build the `skylab-dev` or `unified-dev` environment, then run (use the appropriate path, compiler/mpi/python versions for your system):
 ```
-module load fms@2022.04
-```
-to swap the currently loaded `fms@2022.02` with `fms@2022.04`.
-
-On a configurable (user) platform, follow the instructions in https://spack-stack.readthedocs.io/en/1.2.0 and https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.6.0 to build the `skylab-3.0.0`, then run (use the appropriate path, compiler/mpi/python versions for your system):
-```
-module use /Users/heinzell/prod/spack-stack-v1/envs/skylab-3.0.0/install/modulefiles/Core
+module use /Users/heinzell/prod/spack-stack-v1/envs/unified-dev/install/modulefiles/Core
 module load stack-apple-clang/13.1.6
-module load stack-openmpi/4.1.4
-module load stack-python/3.9.13
-module load jedi-ufs-env/1.0.0
-
-# Loading fms@2022.04 replaces the default fms@2022.02
-module load fms@2022.04
+module load stack-openmpi/4.1.5
+module load stack-python/3.10.8
+module load jedi-ufs-env/unified-dev
+```
+Further, for testing of the newest `fms@2023.02-beta1` tag, verify if the platform you are on has this version available and if yes, run
+```
+# Loading fms/2023.02-beta1 replaces the default fms@2023.01
+module load fms/2023.02-beta1
 ```
 
 ## Building ufs-bundle
@@ -58,7 +58,33 @@ ecbuild --build=debug -DUFS_APP=ATMAERO .. 2>&1 | tee log.ecbuild
 ecbuild --build=debug -DUFS_APP=NG-GODAS .. 2>&1 | tee log.ecbuild
 ecbuild --build=debug -DUFS_APP=S2S .. 2>&1 | tee log.ecbuild
 ```
-On macOS, it may be required to pass `-DCMAKE_EXE_LINKER_FLAGS="-Wl,-no_compact_unwind"` to the ecbuild command,. Further, if using the native Apple `clang` compiler with `llvm-openmp` installed via homebrew or spack, it may be necessary to add `-DCMAKE_SHARED_LINKER_FLAGS="/path/to/llvm-openmp-x.y.z/lib/libomp.dylib"` to the ecbuild command.
+When using the native Apple `clang` compiler on macOS with `llvm-openmp` installed via homebrew or spack, it may be necessary to add `-DCMAKE_SHARED_LINKER_FLAGS="${llvm_openmp_ROOT}/lib/libomp.dylib"` to the ecbuild command.
+
+macOS users may also encounter this error during the linker phase:
+```
+dyld[47628]: dyld[47619]: Library not loaded: 'libpioc.dylib'
+  Referenced from: '/Users/hLibrary not loaded: 'libpioc.dyleinzell/work/ufs-bundle/20230714ib'
+...
+```
+This error comes from the `pioc` library not being installed correctly (a problem we have raised to the `parallelio` maintainers):
+```
+> otool -L ${parallelio_ROOT}/lib/libpioc.dylib
+/Users/heinzell/prod/spack-stack-1.4.1/envs/unified-env/install/apple-clang/13.1.6/parallelio-2.5.9-r5txd2q/lib/libpioc.dylib:
+	libpioc.dylib (compatibility version 0.0.0, current version 0.0.0)
+	/Users/heinzell/prod/spack-stack-1.4.1/envs/unified-env/install/apple-clang/13.1.6/netcdf-c-4.9.2-vrrvi2u/lib/libnetcdf.19.dylib (compatibility version 22.0.0, current version 22.2.0)
+	/Users/heinzell/prod/spack-stack-1.4.1/envs/unified-env/install/apple-clang/13.1.6/parallel-netcdf-1.12.2-mfx2uut/lib/libpnetcdf.4.dylib (compatibility version 5.0.0, current version 5.2.0)
+	/Users/heinzell/prod/spack-stack-1.4.1/envs/unified-env/install/apple-clang/13.1.6/openmpi-4.1.5-j7pjg6h/lib/libmpi.40.dylib (compatibility version 71.0.0, current version 71.5.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1311.100.3)
+```
+The first identifier to the library itself must either contain `@rpath/` and the `RPATH` needs to be added correctly, or (easier) it must contain the full path to the library. This can be fixed by running:
+```
+install_name_tool -id ${parallelio_ROOT}/lib/libpioc.dylib ${parallelio_ROOT}/lib/libpioc.dylib
+```
+A similar fix may be needed for `libpiof.dylib`, depending the `UFS_APP`:
+```
+install_name_tool -id ${parallelio_ROOT}/lib/libpiof.dylib ${parallelio_ROOT}/lib/libpiof.dylib
+install_name_tool -change libpioc.dylib ${parallelio_ROOT}/lib/libpioc.dylib ${parallelio_ROOT}/lib/libpiof.dylib
+```
 
 While building with soca (NG-GODAS or S2S), there will be a long pause during configuration when `ecbuild` is downloading the input files for the test to be run.
 

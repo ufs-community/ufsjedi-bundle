@@ -37,9 +37,9 @@ endif()
 
 # ECMWF libs
 # ----------
-# ecbuild_bundle( PROJECT eckit GIT "https://github.com/ecmwf/eckit.git" TAG 1.20.2 )
-# ecbuild_bundle( PROJECT fckit GIT "https://github.com/ecmwf/fckit.git" TAG 0.10.0 )
-# ecbuild_bundle( PROJECT atlas GIT "https://github.com/ecmwf/atlas.git" TAG 0.32.1 )
+# ecbuild_bundle( PROJECT eckit GIT "https://github.com/ecmwf/eckit.git" TAG 1.23.0 )
+# ecbuild_bundle( PROJECT fckit GIT "https://github.com/ecmwf/fckit.git" TAG 0.10.1 )
+# ecbuild_bundle( PROJECT atlas GIT "https://github.com/ecmwf/atlas.git" TAG 0.33.0 )
 
 # External FMS
 find_package(FMS 2022.04 REQUIRED COMPONENTS R4 R8)
@@ -55,7 +55,7 @@ if(UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES
   ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git" BRANCH develop UPDATE )
 endif()
 
-ecbuild_bundle( PROJECT crtm  GIT "https://github.com/jcsda-internal/crtm.git"  TAG v2.4.1-jedi )
+ecbuild_bundle( PROJECT crtm GIT "https://github.com/JCSDA/CRTMv3.git" BRANCH develop UPDATE )
 
 ecbuild_bundle( PROJECT ioda  GIT "https://github.com/jcsda-internal/ioda.git" BRANCH develop UPDATE )
 ecbuild_bundle( PROJECT ufo   GIT "https://github.com/jcsda-internal/ufo.git" BRANCH develop UPDATE )
@@ -72,7 +72,7 @@ set(FV3_FORECAST_MODEL "UFS")
 
 # fv3-jedi linear model
 # ---------------------
-ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH feature/ufs_dom )  # updated from develop on nov 22, develop hasn't changed by apr 18
+ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH feature/ufs_dom )  # updated from develop on nov 22, develop hasn't changed by june 13
 
 message(INFO "CMAKE_INSTALL_LIBDIR: ${CMAKE_INSTALL_LIBDIR}")
 include_directories(${DEPEND_LIB_ROOT}/${CMAKE_INSTALL_INCLUDEDIR})
@@ -100,12 +100,12 @@ ExternalProject_Add(ufs-weather-model
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
   GIT_REPOSITORY https://github.com/climbfuji/ufs-weather-model
   GIT_SUBMODULES_RECURSE TRUE
-  GIT_TAG feature/consolidate_dom_update_20221114_save_original_for_3dfgat # this is feature/consolidate_dom_update_20221114, updated from develop on Mar 6, before it got updated again
+  GIT_TAG feature/consolidate_dom_update_20221114  # updated from develop on 2023/07/17
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model
   UPDATE_DISCONNECTED ON
   INSTALL_DIR ${DEPEND_LIB_ROOT}
   # DH* 20230316 turn off OpenMP for now ...
-  CMAKE_ARGS -DCMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_LIBDIR} -DCMAKE_C_FLAGS=-fPIC -DCMAKE_Fortran_FLAGS=-fPIC -DCMAKE_CXX_FLAGS=-fPIC -DCCPP_SUITES=FV3_GFS_v16,FV3_GFS_v16_coupled,FV3_GFS_v15p2 -DCMAKE_EXE_LINKER_FLAGS=${UFS_CMAKE_EXE_LINKER_FLAGS} -DCMAKE_C_COMPILER=${MPI_C_COMPILER} -DCMAKE_CXX_COMPILER=${MPI_CXX_COMPILER} -DCMAKE_Fortran_COMPILER=${MPI_Fortran_COMPILER} -DJEDI_DRIVER=ON -DCMAKE_PREFIX_PATH=${CMAKE_CURRENT_BINARY_DIR}/gsw ${UFS_CMAKE_BUILD_TYPE_FLAG} -DOPENMP=OFF -DINLINE_POST=OFF -DMULTI_GASES=OFF -DMPI=ON -DAPP=${UFS_APP} -DCMAKE_INSTALL_PREFIX=${DEPEND_LIB_ROOT}
+  CMAKE_ARGS -DCMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_LIBDIR} -DCMAKE_C_FLAGS=-fPIC -DCMAKE_Fortran_FLAGS=-fPIC -DCMAKE_CXX_FLAGS=-fPIC -DCCPP_SUITES=FV3_GFS_v16,FV3_GFS_v17_coupled_p8,FV3_GFS_v15p2 -DCMAKE_EXE_LINKER_FLAGS=${UFS_CMAKE_EXE_LINKER_FLAGS} -DCMAKE_C_COMPILER=${MPI_C_COMPILER} -DCMAKE_CXX_COMPILER=${MPI_CXX_COMPILER} -DCMAKE_Fortran_COMPILER=${MPI_Fortran_COMPILER} -DJEDI_DRIVER=ON -DCMAKE_PREFIX_PATH=${CMAKE_CURRENT_BINARY_DIR}/gsw ${UFS_CMAKE_BUILD_TYPE_FLAG} -DOPENMP=OFF -DINLINE_POST=OFF -DMULTI_GASES=OFF -DMPI=ON -DAPP=${UFS_APP} -DCMAKE_INSTALL_PREFIX=${DEPEND_LIB_ROOT}
   # *DH
   INSTALL_COMMAND make install
   BUILD_ALWAYS TRUE
@@ -157,11 +157,11 @@ if(UFS_APP MATCHES "^(S2S)$")
   # fv3-jedi and associated repositories
   # ------------------------------------
   ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.2.0 )
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs_dom )  # updated from develop on apr 18
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git"     BRANCH feature/ufs_dom )  # updated from develop on apr 18
+  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs_dom )
+  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git"     BRANCH feature/ufs_dom )
   add_dependencies(soca ufs-weather-model)
 elseif(UFS_APP MATCHES "^(NG-GODAS)$")
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_dom )  # updated from develop on apr 18
+  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_dom )
   add_dependencies(soca ufs-weather-model)
 elseif(UFS_APP MATCHES "^(ATM)$" OR UFS_APP MATCHES "^(ATMAERO)$")
   ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.2.0 )
@@ -174,42 +174,23 @@ endif()
 # ioda, ufo and fv3-jedi test data
 #----------------------------------------
 
-# If IODA branch is being built set GIT_BRANCH_FUNC to IODA's current branch.
-# If a tagged version of IODA is being built set GIT_TAG_FUNC to ioda's current tag. In this case,
-# IODA test files will be download from UCAR DASH and ioda-data repo will not be cloned.
 # When LOCAL_PATH_JEDI_TESTFILES is set to the directory of IODA test files stored
 # in a local directory, ioda-data repo will not be cloned
-
-find_branch_name(REPO_DIR_NAME ioda)
-# When LOCAL_PATH_JEDI_TESTFILES is set to the directory of IODA test files stored
-# in a local directory, ioda-data repo will not be cloned
-if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
+if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} )
   ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/JCSDA-internal/ioda-data.git" BRANCH develop UPDATE )
 endif()
 
-# If IODA's current branch is available in ioda-data repo, that branch will be checked out
-branch_checkout (REPO_DIR_NAME ioda-data
-                 BRANCH ${GIT_BRANCH_FUNC} )
-
 # same procedure for ufo-data
-find_branch_name(REPO_DIR_NAME ufo)
-if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
+if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} )
   ecbuild_bundle( PROJECT ufo-data GIT "https://github.com/JCSDA-internal/ufo-data.git" BRANCH develop UPDATE )
 endif()
 
-# If UFO's current branch is available in ufo-data repo, that branch will be checked out
-branch_checkout (REPO_DIR_NAME ufo-data
-                 BRANCH ${GIT_BRANCH_FUNC} )
-
 # same procedure for fv3-jedi-data
-find_branch_name(REPO_DIR_NAME fv3-jedi)
-if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
-  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/ufs_dom ) # updated from develop on apr 18
+if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} )
+  # DH* 20230718 revert this to feature/ufs_dom once https://github.com/JCSDA-internal/fv3-jedi-data/pull/78 is merged
+  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/ufs_dom_update_ufswm_20230717 )
+  # *DH 20230718
 endif()
-
-# If fv3-jedi's current branch is available in fv3-jedi-data repo, that branch will be checked out
-branch_checkout (REPO_DIR_NAME fv3-jedi-data
-                 BRANCH ${GIT_BRANCH_FUNC} )
 
 # Build Doxygen documentation
 # ---------------------------
