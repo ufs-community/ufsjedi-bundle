@@ -187,7 +187,7 @@ endif()
 # same procedure for fv3-jedi-data
 if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} )
   # DH* 20230718 revert this to feature/ufs_dom once https://github.com/JCSDA-internal/fv3-jedi-data/pull/78 is merged
-  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/ufs_dom_update_ufswm_20230717 )
+  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/ufs_dom_update_ufswm_20230717_update_from_develop_20230830 UPDATE )  # updated from develop Aug 30 2024 --- USED TO BE BRANCH feature/ufs_dom_update_ufswm_20230717 )
   # *DH 20230718
 endif()
 
