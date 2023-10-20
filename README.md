@@ -51,14 +51,14 @@ The bundle can be built in three different configuragions: with fv3-jedi and the
 with soca and the UFS configured with a data-atmosphere using NG-GODAS, or with fv3-jedi and soca and the UFS
 configured with S2S coupling. Only the first two configurations have test cases and are known to work, but all will build.
 
-The parameter for specifying the configuration type is `-DAPP=[ATM|NG-GODAS|S2S]` on the ecbuild configuration line. Create a build directory under/outside `ufs-bundle` and `cd` to it. Then run one of the following `ecbuild` commands:
+The parameter for specifying the configuration type is `-DAPP=[ATM|NG-GODAS|S2S]` on the cmake configuration line. Create a build directory under/outside `ufs-bundle` and `cd` to it. Then run one of the following `cmake` commands:
 ```
-ecbuild --build=debug -DUFS_APP=ATM .. 2>&1 | tee log.ecbuild
-ecbuild --build=debug -DUFS_APP=ATMAERO .. 2>&1 | tee log.ecbuild
-ecbuild --build=debug -DUFS_APP=NG-GODAS .. 2>&1 | tee log.ecbuild
-ecbuild --build=debug -DUFS_APP=S2S .. 2>&1 | tee log.ecbuild
+cmake -DCMAKE_BUILD_TYPE=Debug -DUFS_APP=ATM .. 2>&1 | tee log.cmake
+cmake -DCMAKE_BUILD_TYPE=Debug -DUFS_APP=ATMAERO .. 2>&1 | tee log.cmake
+cmake -DCMAKE_BUILD_TYPE=Debug -DUFS_APP=NG-GODAS .. 2>&1 | tee log.cmake
+cmake -DCMAKE_BUILD_TYPE=Debug -DUFS_APP=S2S .. 2>&1 | tee log.cmake
 ```
-When using the native Apple `clang` compiler on macOS with `llvm-openmp` installed via homebrew or spack, it may be necessary to add `-DCMAKE_SHARED_LINKER_FLAGS="${llvm_openmp_ROOT}/lib/libomp.dylib"` to the ecbuild command.
+When using the native Apple `clang` compiler on macOS with `llvm-openmp` installed via homebrew or spack, it may be necessary to add `-DCMAKE_SHARED_LINKER_FLAGS="${llvm_openmp_ROOT}/lib/libomp.dylib"` to the `cmake` command.
 
 macOS users may also encounter this error during the linker phase:
 ```
@@ -86,7 +86,7 @@ install_name_tool -id ${parallelio_ROOT}/lib/libpiof.dylib ${parallelio_ROOT}/li
 install_name_tool -change libpioc.dylib ${parallelio_ROOT}/lib/libpioc.dylib ${parallelio_ROOT}/lib/libpiof.dylib
 ```
 
-While building with soca (NG-GODAS or S2S), there will be a long pause during configuration when `ecbuild` is downloading the input files for the test to be run.
+While building with soca (NG-GODAS or S2S), there will be a long pause during configuration when `cmake` is downloading the input files for the test to be run.
 
 After configuration, run `make -j 8` to build.
 
@@ -133,4 +133,4 @@ Errors while running CTest
 
 At this point, there are no ctests for ATMAERO or S2S.
 
-Note for later for running on Hera: need to add `-DMPIEXEC_EXECUTABLE="/apps/slurm/default/bin/srun" -DMPIEXEC_NUMPROC_FLAG="-n"` to `ecbuild` command, then run `ctest -R get_` on login node, then acquire a compute node, for example via `salloc -N 1 -n 24 --time=480 --qos=batch -A da-cpu -I`, then run the actual `ctests` on the compute node.
+Note for later for running on Hera: need to add `-DMPIEXEC_EXECUTABLE="/apps/slurm/default/bin/srun" -DMPIEXEC_NUMPROC_FLAG="-n"` to `cmake` command, then run `ctest -R get_` on login node, then acquire a compute node, for example via `salloc -N 1 -n 24 --time=480 --qos=batch -A da-cpu -I`, then run the actual `ctests` on the compute node.

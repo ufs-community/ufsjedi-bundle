@@ -28,12 +28,7 @@ set( ENABLE_MPI ON CACHE BOOL "Compile with MPI")
 set( ENABLE_OMP ON CACHE BOOL "Compile with OpenMP")
 
 # Use external jedi-cmake or build in bundle
-if(DEFINED ENV{jedi_cmake_ROOT})
-  include( $ENV{jedi_cmake_ROOT}/share/jedicmake/Functions/git_functions.cmake )
-else()
-  ecbuild_bundle( PROJECT jedicmake GIT "https://github.com/jcsda-internal/jedi-cmake.git" TAG 1.4.0 UPDATE RECURSIVE )
-  include( jedicmake/cmake/Functions/git_functions.cmake )
-endif()
+include( $ENV{jedi_cmake_ROOT}/share/jedicmake/Functions/git_functions.cmake )
 
 # ECMWF libs
 # ----------
