@@ -46,7 +46,7 @@ find_package(FMS 2022.04 REQUIRED COMPONENTS R4 R8)
 
 # Core JEDI repositories
 # ----------------------
-ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH feature/ensembleForecasts )
 ecbuild_bundle( PROJECT vader GIT "https://github.com/jcsda-internal/vader.git" BRANCH develop UPDATE )
 ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda-internal/saber.git" BRANCH develop UPDATE )
 
@@ -97,9 +97,10 @@ endif()
 
 ExternalProject_Add(ufs-weather-model
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
-  GIT_REPOSITORY https://github.com/climbfuji/ufs-weather-model
+# GIT_REPOSITORY https://github.com/climbfuji/ufs-weather-model
+  GIT_REPOSITORY https://github.com/NOAA-EPIC/ufs-weather-model
   GIT_SUBMODULES_RECURSE TRUE
-  GIT_TAG feature/consolidate_dom_update_20221114  # updated from develop on 2023/07/17
+  GIT_TAG feature/s2s # updated from develop on 2023/07/17
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model
   UPDATE_DISCONNECTED ON
   INSTALL_DIR ${DEPEND_LIB_ROOT}
@@ -156,15 +157,15 @@ if(UFS_APP MATCHES "^(S2S)$")
   # fv3-jedi and associated repositories
   # ------------------------------------
   ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.2.0 )
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs_dom UPDATE )  # updated from develop Aug 30 2023
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git"     BRANCH feature/ufs_dom UPDATE )  # note this has not been updated in a while, there are many merge conflicts that need to be resolved
+  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs_dom )  # updated from develop Aug 30 2023
+  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git"     BRANCH feature/ufs_dom )  # note this has not been updated in a while, there are many merge conflicts that need to be resolved
   add_dependencies(soca ufs-weather-model)
 elseif(UFS_APP MATCHES "^(NG-GODAS)$")
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_dom UPDATE )  # note this has not been updated in a while, there are many merge conflicts that need to be resolved
+  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_dom )  # note this has not been updated in a while, there are many merge conflicts that need to be resolved
   add_dependencies(soca ufs-weather-model)
 elseif(UFS_APP MATCHES "^(ATM)$" OR UFS_APP MATCHES "^(ATMAERO)$")
   ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.2.0 )
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs_dom UPDATE )  # updated from develop Aug 30 2023
+  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs-EnsForecasts )  # updated from develop Aug 30 2023
 else()
   message(FATAL_ERROR "ufs-bundle unknown UFS_APP ${UFS_APP}")
 endif()
