@@ -28,12 +28,7 @@ set( ENABLE_MPI ON CACHE BOOL "Compile with MPI")
 set( ENABLE_OMP ON CACHE BOOL "Compile with OpenMP")
 
 # Use external jedi-cmake or build in bundle
-if(DEFINED ENV{jedi_cmake_ROOT})
-  include( $ENV{jedi_cmake_ROOT}/share/jedicmake/Functions/git_functions.cmake )
-else()
-  ecbuild_bundle( PROJECT jedicmake GIT "https://github.com/jcsda-internal/jedi-cmake.git" TAG 1.4.0 UPDATE RECURSIVE )
-  include( jedicmake/cmake/Functions/git_functions.cmake )
-endif()
+include( $ENV{jedi_cmake_ROOT}/share/jedicmake/Functions/git_functions.cmake )
 
 # ECMWF libs
 # ----------
@@ -57,8 +52,13 @@ endif()
 
 ecbuild_bundle( PROJECT crtm GIT "https://github.com/JCSDA/CRTMv3.git" BRANCH develop UPDATE )
 
-ecbuild_bundle( PROJECT ioda  GIT "https://github.com/jcsda-internal/ioda.git" BRANCH develop UPDATE )
-ecbuild_bundle( PROJECT ufo   GIT "https://github.com/jcsda-internal/ufo.git" BRANCH develop UPDATE )
+option(ENABLE_IODA_DATA "Obtain ioda test data from ioda-data repository (vs tarball)" ON)
+ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/JCSDA-internal/ioda-data.git" BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT ioda      GIT "https://github.com/jcsda-internal/ioda.git"      BRANCH develop UPDATE )
+
+option(ENABLE_UFO_DATA "Obtain ufo test data from ufo-data repository (vs tarball)" ON)
+ecbuild_bundle( PROJECT ufo-data GIT "https://github.com/jcsda-internal/ufo-data.git" BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT ufo      GIT "https://github.com/jcsda-internal/ufo.git"      BRANCH develop UPDATE )
 
 # Options for building with certain models
 # ----------------------------------------
@@ -152,43 +152,20 @@ set_target_properties(fv3atm PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/${C
 set_target_properties(ccppphys PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/${CMAKE_INSTALL_LIBDIR}/libccpp_physics.a)
 set_target_properties(mom6 PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/${CMAKE_INSTALL_LIBDIR}/libmom6.a)
 
-if(UFS_APP MATCHES "^(S2S)$")
-  # fv3-jedi and associated repositories
-  # ------------------------------------
-  ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.2.0 )
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs_dom UPDATE )  # updated from develop Aug 30 2023
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git"     BRANCH feature/ufs_dom UPDATE )  # note this has not been updated in a while, there are many merge conflicts that need to be resolved
-  add_dependencies(soca ufs-weather-model)
+if(UFS_APP MATCHES "^(ATM)$" OR UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$")
+  ecbuild_bundle( PROJECT femps         GIT "https://github.com/jcsda-internal/femps.git"         TAG 1.2.0 )
+  option(ENABLE_FV3_JEDI_DATA "Obtain fv3-jedi test data from fv3-jedi-data repository (vs tarball)" ON)
+  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/ufs_dom UPDATE ) # updated from develop Oct 20 2023
+  ecbuild_bundle( PROJECT fv3-jedi      GIT "https://github.com/jcsda-internal/fv3-jedi.git"      BRANCH feature/ufs_dom UPDATE )  # updated from develop Oct 20 2023
+  if(UFS_APP MATCHES "^(S2S)$")
+    ecbuild_bundle( PROJECT soca        GIT "https://github.com/jcsda-internal/soca.git"          BRANCH feature/ufs_dom UPDATE )  # note this has not been updated in a while, there are many merge conflicts that need to be resolved
+    add_dependencies(soca ufs-weather-model)
+  endif()
 elseif(UFS_APP MATCHES "^(NG-GODAS)$")
   ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_dom UPDATE )  # note this has not been updated in a while, there are many merge conflicts that need to be resolved
   add_dependencies(soca ufs-weather-model)
-elseif(UFS_APP MATCHES "^(ATM)$" OR UFS_APP MATCHES "^(ATMAERO)$")
-  ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.2.0 )
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs_dom UPDATE )  # updated from develop Aug 30 2023
 else()
   message(FATAL_ERROR "ufs-bundle unknown UFS_APP ${UFS_APP}")
-endif()
-
-
-# ioda, ufo and fv3-jedi test data
-#----------------------------------------
-
-# When LOCAL_PATH_JEDI_TESTFILES is set to the directory of IODA test files stored
-# in a local directory, ioda-data repo will not be cloned
-if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} )
-  ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/JCSDA-internal/ioda-data.git" BRANCH develop UPDATE )
-endif()
-
-# same procedure for ufo-data
-if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} )
-  ecbuild_bundle( PROJECT ufo-data GIT "https://github.com/JCSDA-internal/ufo-data.git" BRANCH develop UPDATE )
-endif()
-
-# same procedure for fv3-jedi-data
-if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} )
-  # DH* 20230718 revert this to feature/ufs_dom once https://github.com/JCSDA-internal/fv3-jedi-data/pull/78 is merged
-  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/ufs_dom_update_ufswm_20230717 ) # updated from develop Aug 30 2023
-  # *DH 20230718
 endif()
 
 # Build Doxygen documentation
