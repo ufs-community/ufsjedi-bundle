@@ -130,7 +130,7 @@ jobs:
           cd ${JEDI_ENV}
           mkdir -p build-atm
           cd build-atm
-          ecbuild -DUFS_APP=ATM ../ufs-bundle
+          cmake -DUFS_APP=ATM ../ufs-bundle
           make update
           make -j8
 
@@ -147,7 +147,7 @@ jobs:
           cd ${JEDI_ENV}
           mkdir -p build-atmaero
           cd build-atmaero
-          ecbuild -DUFS_APP=ATMAERO ../ufs-bundle
+          cmake -DUFS_APP=ATMAERO ../ufs-bundle
           make update
           make -j8
 
@@ -156,7 +156,7 @@ jobs:
           #cd ${JEDI_ENV}
           #mkdir -p build-ng-godas
           #cd build-ng-godas
-          #ecbuild -DUFS_APP=NG-GODAS ../ufs-bundle
+          #cmake -DUFS_APP=NG-GODAS ../ufs-bundle
           #make update
           #make -j8
           #
@@ -164,7 +164,7 @@ jobs:
           #cd ${JEDI_ENV}
           #mkdir -p build-s2s
           #cd build-s2s
-          #ecbuild -DUFS_APP=S2S ../ufs-bundle
+          #cmake -DUFS_APP=S2S ../ufs-bundle
           #make update
           #make -j8
 
