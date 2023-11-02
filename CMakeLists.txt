@@ -156,7 +156,7 @@ if(UFS_APP MATCHES "^(ATM)$" OR UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES
   ecbuild_bundle( PROJECT femps         GIT "https://github.com/jcsda-internal/femps.git"         TAG 1.2.0 )
   option(ENABLE_FV3_JEDI_DATA "Obtain fv3-jedi test data from fv3-jedi-data repository (vs tarball)" ON)
   ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/ufs_dom UPDATE ) # updated from develop Oct 20 2023
-  ecbuild_bundle( PROJECT fv3-jedi      GIT "https://github.com/jcsda-internal/fv3-jedi.git"      BRANCH feature/ufs_dom UPDATE )  # updated from develop Oct 20 2023
+  ecbuild_bundle( PROJECT fv3-jedi      GIT "https://github.com/jcsda-internal/fv3-jedi.git"      BRANCH feature/update_ufs_dom_from_dev_20231102 UPDATE )  # updated from develop Nov 02 2023
   if(UFS_APP MATCHES "^(S2S)$")
     ecbuild_bundle( PROJECT soca        GIT "https://github.com/jcsda-internal/soca.git"          BRANCH feature/ufs_dom UPDATE )  # note this has not been updated in a while, there are many merge conflicts that need to be resolved
     add_dependencies(soca ufs-weather-model)
