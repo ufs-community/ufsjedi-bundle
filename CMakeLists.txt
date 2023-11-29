@@ -100,10 +100,12 @@ endif()
 ExternalProject_Add(ufs-weather-model
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
 # GIT_REPOSITORY https://github.com/climbfuji/ufs-weather-model
-  GIT_REPOSITORY https://github.com/NOAA-EPIC/ufs-weather-model
+# GIT_REPOSITORY https://github.com/NOAA-EPIC/ufs-weather-model
+  GIT_REPOSITORY https://github.com/ufs-community/ufs-weather-model
   GIT_SUBMODULES_RECURSE TRUE
-  GIT_TAG feature/s2s # updated from develop on 2023/07/17
-  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model
+# GIT_TAG feature/s2s # updated from develop on 2023/07/17
+  GIT_TAG develop 
+  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model-dev
   UPDATE_DISCONNECTED ON
   INSTALL_DIR ${DEPEND_LIB_ROOT}
   # DH* 20230316 turn off OpenMP for now ...
