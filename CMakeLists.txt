@@ -72,7 +72,7 @@ set(FV3_FORECAST_MODEL "UFS")
 
 # fv3-jedi linear model
 # ---------------------
-ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH feature/ufs_dom UPDATE )  # updated from develop Nov 02 2023
+ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH feature/ufs_dom UPDATE )  # updated from develop Dec 05 2023
 message(INFO "CMAKE_INSTALL_LIBDIR: ${CMAKE_INSTALL_LIBDIR}")
 include_directories(${DEPEND_LIB_ROOT}/${CMAKE_INSTALL_INCLUDEDIR})
 include_directories(${DEPEND_LIB_ROOT}/include_r8)
@@ -155,8 +155,8 @@ set_target_properties(mom6 PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/${CMA
 if(UFS_APP MATCHES "^(ATM)$" OR UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$")
   ecbuild_bundle( PROJECT femps         GIT "https://github.com/jcsda-internal/femps.git"         TAG 1.2.0 )
   option(ENABLE_FV3_JEDI_DATA "Obtain fv3-jedi test data from fv3-jedi-data repository (vs tarball)" ON)
-  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/ufs_dom UPDATE )  # updated from develop Nov 02 2023
-  ecbuild_bundle( PROJECT fv3-jedi      GIT "https://github.com/jcsda-internal/fv3-jedi.git"      BRANCH feature/ufs_dom UPDATE )  # updated from develop Nov 02 2023
+  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/ufs_dom UPDATE )  # updated from develop Dec 05 2023
+  ecbuild_bundle( PROJECT fv3-jedi      GIT "https://github.com/jcsda-internal/fv3-jedi.git"      BRANCH feature/ufs_dom_20231205 UPDATE )  # updated from develop Dec 05 2023
   if(UFS_APP MATCHES "^(S2S)$")
     ecbuild_bundle( PROJECT soca        GIT "https://github.com/jcsda-internal/soca.git"          BRANCH feature/ufs_dom UPDATE )  # note this has not been updated in a while, there are many merge conflicts that need to be resolved
     add_dependencies(soca ufs-weather-model)
