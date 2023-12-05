@@ -172,9 +172,7 @@ if(UFS_APP MATCHES "^(S2S)$")
   # fv3-jedi and associated repositories
   # ------------------------------------
   ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.2.0 )
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs_dom )  # updated from develop Aug 30 2023
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git"     BRANCH feature/ufs_dom )  # note this has not been updated in a while, there are many merge conflicts that need to be resolved
-  add_dependencies(soca ufs-weather-model)
+  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs-EnsForecasts )  # updated from develop Aug 30 2023
 elseif(UFS_APP MATCHES "^(NG-GODAS)$")
   ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_dom )  # note this has not been updated in a while, there are many merge conflicts that need to be resolved
   add_dependencies(soca ufs-weather-model)
