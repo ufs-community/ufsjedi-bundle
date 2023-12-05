@@ -97,19 +97,24 @@ else()
   set(UFS_CMAKE_BUILD_TYPE_FLAG "-DREPRO=ON")
 endif()
 
-set(patch_command ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/patches/checksum.patch <SOURCE_DIR>/FV3/atmos_cubed_sphere && cd <SOURCE_DIR>/FV3/atmos_cubed_sphere && git apply checksum.patch)
 
-set(UFS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model-test)
-#set(UFS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model)
+if(UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES "^(NG-GODAS)$")
+  set(UFS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model-static)
+  set(UFS_REPO https://github.com/climbfuji/ufs-weather-model)
+  set(UFS_TAG "feature/consolidate_dom_update_20221114")
+   set(patch_command "")
+else()
+  set(UFS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model)
+  set(UFS_REPO https://github.com/ufs-community/ufs-weather-model)
+  set(UFS_TAG "develop")
+   set(patch_command ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/patches/checksum.patch <SOURCE_DIR>/FV3/atmos_cubed_sphere && cd <SOURCE_DIR>/FV3/atmos_cubed_sphere && git apply checksum.patch)
+endif()
 
 ExternalProject_Add(ufs-weather-model
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
-# GIT_REPOSITORY https://github.com/climbfuji/ufs-weather-model
-# GIT_REPOSITORY https://github.com/NOAA-EPIC/ufs-weather-model
-  GIT_REPOSITORY https://github.com/ufs-community/ufs-weather-model
+  GIT_REPOSITORY ${UFS_REPO}
   GIT_SUBMODULES_RECURSE TRUE
-# GIT_TAG feature/s2s # updated from develop on 2023/07/17
-  GIT_TAG develop 
+  GIT_TAG ${UFS_TAG}
   PATCH_COMMAND ${patch_command}
   SOURCE_DIR ${UFS_SOURCE_DIR}
   UPDATE_DISCONNECTED ON
