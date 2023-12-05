@@ -4,7 +4,7 @@ Bundle for interfacing UFS models with JEDI interfaces
 
 ## Required thirdparty libraries
 
-This bundle requires the following spack-stack modules be loaded (all except `fms@2022.04` are in the `skylab-3.0.0` environment):
+This bundle requires the following spack-stack modules be loaded (all except `fms@2022.04` and `atlast@0.35.1` are in the `skylab-3.0.0` environment):
 ```
 > module li
 
@@ -17,7 +17,7 @@ Currently Loaded Modules:
   6) pigz/2.7                  27) g2/3.4.5                 48) fckit/0.10.1       69) py-findlibs/0.0.2            90) py-beniget/0.4.1
   7) zstd/1.5.2                28) g2tmpl/1.10.2            49) fiat/1.1.0         70) py-setuptools/59.4.0         91) py-ply/3.11
   8) tar/1.34                  29) sp/2.3.3                 50) ectrans/1.2.0      71) py-numpy/1.22.3              92) py-pythran/0.12.2
-  9) gettext/0.21.1            30) ip/3.3.3                 51) atlas/0.33.0       72) py-eccodes/1.4.2             93) py-scipy/1.9.3
+  9) gettext/0.21.1            30) ip/3.3.3                 51) atlas/0.35.1       72) py-eccodes/1.4.2             93) py-scipy/1.9.3
  10) libxcrypt/4.4.33          31) cmake/3.23.1             52) gsibec/1.1.2       73) py-f90nml/1.4.3              94) py-xarray/2022.3.0
  11) sqlite/3.40.1             32) git/2.36.0               53) gsl-lite/0.37.0    74) py-h5py/3.7.0                95) jedi-base-env/1.0.0
  12) python/3.10.8             33) libbacktrace/2020-02-19  54) hdf/4.2.15         75) py-cftime/1.0.3.4            96) gftl/1.8.3
