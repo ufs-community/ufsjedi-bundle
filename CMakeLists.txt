@@ -96,16 +96,24 @@ else()
 endif()
 
 
-if(UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES "^(NG-GODAS)$")
-  set(UFS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model-static)
-  set(UFS_REPO https://github.com/climbfuji/ufs-weather-model)
-  set(UFS_TAG "feature/consolidate_dom_update_20221114")
-   set(patch_command "")
-else()
+if(UFS_APP MATCHES "^(ATM)$" OR UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$")
   set(UFS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model)
   set(UFS_REPO https://github.com/ufs-community/ufs-weather-model)
-  set(UFS_TAG "develop")
-   set(patch_command ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/patches/checksum.patch <SOURCE_DIR>/FV3/atmos_cubed_sphere && cd <SOURCE_DIR>/FV3/atmos_cubed_sphere && git apply checksum.patch)
+  set(UFS_TAG "develop" )
+  set(patch_command ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/patches/mom6.patch <SOURCE_DIR>/MOM6-interface && cd <SOURCE_DIR>/MOM6-interface && git apply mom6.patch)
+else(UFS_APP MATCHES "^(NG-GODAS)$" )
+  set(UFS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model-static)
+# set(UFS_REPO https://github.com/climbfuji/ufs-weather-model)
+# set(UFS_TAG "feature/consolidate_dom_update_20221114")
+# set(patch_command "")
+  set(UFS_REPO https://github.com/ufs-community/ufs-weather-model)
+  set(UFS_TAG "develop" )
+  set(patch_command ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/patches/mom6.patch <SOURCE_DIR>/MOM6-interface && cd <SOURCE_DIR>/MOM6-interface && git apply mom6.patch)
+#else()
+#  set(UFS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model)
+#  set(UFS_REPO https://github.com/ufs-community/ufs-weather-model)
+#  set(UFS_TAG "develop")
+#  set(patch_command ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/patches/checksum.patch <SOURCE_DIR>/FV3/atmos_cubed_sphere && cd <SOURCE_DIR>/FV3/atmos_cubed_sphere && git apply checksum.patch)
 endif()
 
 ExternalProject_Add(ufs-weather-model
@@ -187,14 +195,14 @@ endif()
 
 # When LOCAL_PATH_JEDI_TESTFILES is set to the directory of IODA test files stored
 # in a local directory, ioda-data repo will not be cloned
-if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} )
-  ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/JCSDA-internal/ioda-data.git" BRANCH develop UPDATE )
-endif()
+#if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} )
+#  ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/JCSDA-internal/ioda-data.git" BRANCH develop UPDATE )
+#endif()
 
 # same procedure for ufo-data
-if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} )
-  ecbuild_bundle( PROJECT ufo-data GIT "https://github.com/JCSDA-internal/ufo-data.git" BRANCH develop UPDATE )
-endif()
+#if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} )
+#  ecbuild_bundle( PROJECT ufo-data GIT "https://github.com/JCSDA-internal/ufo-data.git" BRANCH develop UPDATE )
+#endif()
 
 # same procedure for fv3-jedi-data
 if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} )
