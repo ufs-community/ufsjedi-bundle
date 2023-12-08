@@ -20,7 +20,9 @@ jobs:
 
     steps:
       - name: cleanup
-        if: ${{ github.event_name == 'schedule' }}
+        # DH* TO ALLOW FOR TESTING PARALLEL TO OTHER PRS
+        #if: ${{ github.event_name == 'schedule' }}
+        # *DH
         env:
           JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
         run: |
@@ -188,3 +190,16 @@ jobs:
           ## Default: notify channel
           mention_groups: '!channel'
           mention_groups_when: 'failure,warnings'
+
+      # DH* TO ALLOW FOR TESTING PARALLEL TO OTHER PRS
+      - name: cleanuponcemore
+        env:
+          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
+        run: |
+          # Remove and prepare run directory
+          rm -fr ${JEDI_ENV}
+          mkdir -p ${JEDI_ENV}
+          cd ${JEDI_ENV}
+          pwd
+          ls -lart
+      # *DH
