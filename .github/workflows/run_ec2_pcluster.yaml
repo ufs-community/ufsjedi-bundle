@@ -74,7 +74,7 @@ jobs:
           cat <<EOF > setup.sh
           #!/bin/bash
 
-          echo "Loading ufs-bundle environment using spack-stack-1.5.0"
+          echo "Loading ufs-bundle environment using spack-stack-1.5.1"
 
           ulimit -s unlimited
           ulimit -c unlimited
@@ -84,7 +84,7 @@ jobs:
 
           source /opt/intel/oneapi/compiler/2022.1.0/env/vars.sh
 
-          module use /mnt/experiments-efs/skylab-v6/spack-stack-1.5.0/envs/unified-env/install/modulefiles/Core
+          module use /mnt/experiments-efs/skylab-v7/spack-stack-1.5.1/envs/unified-env/install/modulefiles/Core
           module load stack-intel/2022.1.0
           module load stack-intel-oneapi-mpi/2021.6.0
           module load stack-python/3.10.8
@@ -183,8 +183,8 @@ jobs:
           message_format: '{emoji} *{workflow}* {status_message} for branch {branch} in <{repo_url}|{repo}>'
           footer: ${{ github.event.pull_request.number || github.event_name || 'workflow dispatched manually' }}
           # For testing: only notify user Dom
-          mention_users: 'U02NLGXF5HV'
-          mention_users_when: 'failure,warnings'
+          #mention_users: 'U02NLGXF5HV'
+          #mention_users_when: 'failure,warnings'
           ## Default: notify channel
-          #mention_groups: '!channel'
-          #mention_groups_when: 'failure,warnings'
+          mention_groups: '!channel'
+          mention_groups_when: 'failure,warnings'
