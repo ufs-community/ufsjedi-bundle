@@ -136,8 +136,7 @@ jobs:
 
           # Runs mandatory ctests on the head node
           ctest -R get_
-          ctest -V -R fv3jedi_setup_ufs_c48_data
-          ctest -R fv3jedi_setup_ufs_rundir_warmstart
+          ctest -V -R fv3jedi_setup_ufs_
           ctest -R fv3jedi_test_tier1_model_ufs_warmstart
           ctest -R fv3jedi_test_tier1_forecast_ufs_warmstart
           ctest -R ufsjedi_test_tier1_Ensforecast_ufs_warmstart
