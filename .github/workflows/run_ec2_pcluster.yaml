@@ -131,7 +131,7 @@ jobs:
           mkdir -p build-atm
           cd build-atm
           cmake -DUFS_APP=ATM ../ufs-bundle
-          make update
+          make  update
           make -j8
 
           # Runs mandatory ctests on the head node
