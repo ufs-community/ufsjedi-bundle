@@ -135,7 +135,9 @@ jobs:
           make -j8
 
           # Runs mandatory ctests on the head node
-          ctest -V -R ufs_
+          rm fv3-jedi/test/Data/ModelRunDirs/UFS_warmstart/*
+          rm fv3-jedi/test/Data/ModelRunDirs/UFS_warmstart_2/*
+          ctest -R ufs_
 
           # UFS_APP=ATMAERO
           cd ${JEDI_ENV}
