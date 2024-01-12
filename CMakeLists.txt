@@ -102,7 +102,11 @@ endif()
 set(UFS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model)
 set(UFS_REPO https://github.com/ufs-community/ufs-weather-model)
 set(UFS_TAG "develop" )
-set(patch_command ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/patches/ng-godas.patch <SOURCE_DIR> && cd <SOURCE_DIR> && git apply ng-godas.patch)
+if(UFS_APP MATCHES "^(NG-GODAS)$")
+   set(patch_command ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/patches/ng-godas.patch <SOURCE_DIR> && cd <SOURCE_DIR> && git apply ng-godas.patch)
+else()
+  set(patch_command "")
+endif()
 
 ExternalProject_Add(ufs-weather-model
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
