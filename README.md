@@ -24,7 +24,7 @@ Currently Loaded Modules:
  13) stack-python/3.10.8       34) nccmp/1.9.0.1            55) jedi-cmake/1.4.0   76) py-netcdf4/1.5.3             97) gftl-shared/1.5.0
  14) bacio/2.4.1               35) py-pip/23.0              56) libxt/1.1.5        77) py-bottleneck/1.3.5          98) yafyaml/0.5.1
  15) curl/8.0.1                36) wget/1.21.3              57) libxmu/1.1.2       78) py-packaging/23.0            99) mapl/2.35.2-esmf-8.4.2
- 16) pkg-config/0.29.2         37) base-env/1.0.0           58) libxpm/3.5.12      79) py-numexpr/2.8.3            100) w3nco/2.4.1
+ 16) pkg-config/0.29.2         37) base-env/1.0.0           58) libxpm/3.5.12      79) py-numexpr/2.8.3            100) w3emc/2.10.0
  17) hdf5/1.14.0               38) boost/1.78.0             59) libxaw/1.0.13      80) py-six/1.16.0               101) nemsio/2.5.2
  18) netcdf-c/4.9.2            39) bufr/12.0.0              60) udunits/2.2.28     81) py-python-dateutil/2.8.2    102) sigio/2.3.2
  19) netcdf-fortran/4.6.0      40) git-lfs/3.1.4            61) ncview/2.1.8       82) py-pytz/2022.2.1            103) w3emc/2.9.2
