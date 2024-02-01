@@ -9,6 +9,7 @@ This bundle requires the jedi-ufs-env meta-module from spack-stack version 1.5.1
 > module li
 
 Currently Loaded Modules:
+
   1) intel-oneapi-compilers/2021.3.0  27) gettext/0.21      53) libtirpc/1.2.6               79) py-et-xmlfile/1.0.1
   2) stack-intel/2021.3.0             28) libunistring/1.1  54) hdf/4.2.15                   80) py-jdcal/1.3
   3) intel-oneapi-mpi/2021.3.0        29) libidn2/2.3.4     55) jedi-cmake/1.4.0             81) py-openpyxl/3.0.7
@@ -26,7 +27,7 @@ Currently Loaded Modules:
  15) parallel-netcdf/1.12.2           41) eigen/3.4.0       67) py-pycparser/2.21            93) jedi-base-env/1.0.0
  16) parallelio/2.5.10                42) openblas/0.3.19   68) py-cffi/1.15.1               94) gftl/1.10.0
  17) esmf/8.5.0                       43) eckit/1.24.4      69) py-findlibs/0.0.2            95) gftl-shared/1.6.1
- 18) fms/2023.01                      44) fftw/3.3.10       70) py-setuptools/59.4.0         96) fargparse/1.5.0
+ 18) fms/2023.02.01                   44) fftw/3.3.10       70) py-setuptools/59.4.0         96) fargparse/1.5.0
  19) libjpeg/2.1.0                    45) fckit/0.11.0      71) py-numpy/1.22.3              97) mapl/2.40.3-esmf-8.5.0
  20) jasper/2.0.32                    46) fiat/1.2.0        72) py-eccodes/1.4.2             98) w3emc/2.10.0
  21) libpng/1.6.37                    47) ectrans/1.2.0     73) py-f90nml/1.4.3              99) nemsio/2.5.4
@@ -37,6 +38,7 @@ Currently Loaded Modules:
  26) cmake/3.23.1                     52) krb5/1.20.1       78) py-numexpr/2.8.4
 ```
 On a pre-configured platform that has spack-stack-1.5.1 (or 1.5.0) installed, load the spack-stack modules as described in https://spack-stack.readthedocs.io/en/1.5.1 (https://spack-stack.readthedocs.io/en/1.5.0), followed by `module load jedi-ufs-env`. On a configurable (user) platform, follow the instructions in https://spack-stack.readthedocs.io/en/1.5.1 to build the `skylab-dev` or `unified-dev` environment, then run (use the appropriate path, compiler/mpi/python versions for your system):
+
 ```
 module use /Users/heinzell/prod/spack-stack-v1/envs/unified-dev/install/modulefiles/Core
 module load stack-apple-clang/13.1.6
