@@ -90,6 +90,7 @@ jobs:
           module load stack-python/3.10.8
 
           module load jedi-ufs-env/1.0.0
+          module load fms/2023.02.01
 
           module li
 
