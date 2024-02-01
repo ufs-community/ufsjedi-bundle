@@ -131,7 +131,6 @@ jobs:
           cd ${JEDI_ENV}
           mkdir -p build-atm
           cd build-atm
-          rm -rf *
           cmake -DUFS_APP=ATM ../ufs-bundle
           make update
           make -j8
@@ -145,26 +144,27 @@ jobs:
           cd ${JEDI_ENV}
           mkdir -p build-atmaero
           cd build-atmaero
+          rm -rf *
           cmake -DUFS_APP=ATMAERO ../ufs-bundle
           make update
           make -j8
 
           # Skip those for now - linker errors because of static/dynamic library mix
-          ## UFS_APP=NG-GODAS
-          #cd ${JEDI_ENV}
-          #mkdir -p build-ng-godas
-          #cd build-ng-godas
-          #cmake -DUFS_APP=NG-GODAS ../ufs-bundle
-          #make update
-          #make -j8
+          UFS_APP=NG-GODAS
+          cd ${JEDI_ENV}
+          mkdir -p build-ng-godas
+          cd build-ng-godas
+          cmake -DUFS_APP=NG-GODAS ../ufs-bundle
+          make update
+          make -j8
           #
-          ## UFS_APP=S2S
-          #cd ${JEDI_ENV}
-          #mkdir -p build-s2s
-          #cd build-s2s
-          #cmake -DUFS_APP=S2S ../ufs-bundle
-          #make update
-          #make -j8
+          # UFS_APP=S2S
+          cd ${JEDI_ENV}
+          mkdir -p build-s2s
+          cd build-s2s
+          cmake -DUFS_APP=S2S ../ufs-bundle
+          make update
+          make -j8
 
       - name: Report Status
         if: always()
