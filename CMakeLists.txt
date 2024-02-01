@@ -63,7 +63,6 @@ option(ENABLE_UFO_DATA "Obtain ufo test data from ufo-data repository (vs tarbal
 ecbuild_bundle( PROJECT ufo-data GIT "https://github.com/jcsda-internal/ufo-data.git" BRANCH develop UPDATE )
 ecbuild_bundle( PROJECT ufo      GIT "https://github.com/jcsda-internal/ufo.git"      BRANCH develop UPDATE )
 
-
 # Options for building with certain models
 # ----------------------------------------
 set(UFS_APP "ATM" CACHE STRING "Choose the UFS Application")
