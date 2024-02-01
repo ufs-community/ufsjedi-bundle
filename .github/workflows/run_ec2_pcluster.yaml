@@ -129,6 +129,7 @@ jobs:
 
           # UFS_APP=ATM
           cd ${JEDI_ENV}
+          rm -rf build-*
           mkdir -p build-atm
           cd build-atm
           cmake -DUFS_APP=ATM ../ufs-bundle
