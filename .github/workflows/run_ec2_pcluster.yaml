@@ -131,6 +131,7 @@ jobs:
           cd ${JEDI_ENV}
           mkdir -p build-atm
           cd build-atm
+          rm -rf ufs-weather-model
           cmake -DUFS_APP=ATM ../ufs-bundle
           make update
           make -j8
