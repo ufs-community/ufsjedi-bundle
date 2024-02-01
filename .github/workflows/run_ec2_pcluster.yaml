@@ -144,7 +144,6 @@ jobs:
           cd ${JEDI_ENV}
           mkdir -p build-atmaero
           cd build-atmaero
-          rm -rf *
           cmake -DUFS_APP=ATMAERO ../ufs-bundle
           make update
           make -j8
