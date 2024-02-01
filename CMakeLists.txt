@@ -181,7 +181,6 @@ else()
   message(FATAL_ERROR "ufs-bundle unknown UFS_APP ${UFS_APP}")
 endif()
 
-
 # Build Doxygen documentation
 # ---------------------------
 option(BUILD_UFSJEDI_BUNDLE_DOC "Build documentation" OFF)
