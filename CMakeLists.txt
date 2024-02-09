@@ -43,7 +43,8 @@ find_package(FMS 2022.04 REQUIRED COMPONENTS R4 R8)
 # Core JEDI repositories
 # ----------------------
 #ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH test )
-ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH stateset )
+#ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH stateset )
+ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH feature/ufs-stateset )
 #ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH develop UPDATE )
 ecbuild_bundle( PROJECT vader GIT "https://github.com/jcsda-internal/vader.git" BRANCH develop UPDATE )
 ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda-internal/saber.git" BRANCH develop UPDATE )
@@ -76,7 +77,7 @@ set(FV3_FORECAST_MODEL "UFS")
 
 # fv3-jedi linear model
 # ---------------------
-ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH feature/ufs_dom UPDATE )  # updated from develop Dec 05 2023
+ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH develop UPDATE )  # updated from develop Dec 05 2023
 message(INFO "CMAKE_INSTALL_LIBDIR: ${CMAKE_INSTALL_LIBDIR}")
 include_directories(${DEPEND_LIB_ROOT}/${CMAKE_INSTALL_INCLUDEDIR})
 include_directories(${DEPEND_LIB_ROOT}/include_r8)
@@ -169,11 +170,10 @@ set_target_properties( mom6 PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/${CM
 ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.2.0 )
 if(UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES "^(ATM)$")
   option(ENABLE_FV3_JEDI_DATA "Obtain fv3-jedi test data from fv3-jedi-data repository (vs tarball)" ON)
-  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/ufs-EnsForecasts ) 
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs-EnsForecasts-dev )  
+  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH develop ) 
+  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs-EnsForecasts )  
 elseif(UFS_APP MATCHES "^(NG-GODAS)$")
-# ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_dom UPDATE )  
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_mark UPDATE )  
+  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_dom UPDATE )  
   add_dependencies(soca ufs-weather-model)
 else()
   message(FATAL_ERROR "ufs-bundle unknown UFS_APP ${UFS_APP}")
@@ -186,5 +186,17 @@ option(BUILD_UFSJEDI_BUNDLE_DOC "Build documentation" OFF)
 if(BUILD_UFSJEDI_BUNDLE_DOC)
    add_subdirectory( Documentation )
 endif()
-
+#message("HEYY cmake_binary_dir is ${CMAKE_BINARY_DIR}")
+#add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/bin/.bin
+#  COMMAND ${CMAKE_COMMAND} -E "mkdir .bin && mv * .bin" 
+#  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+#  DEPENDS mom6
+#  COMMENT "create .bin directory"
+#  VERBATIM
+#)
+#add_custom_target(containerize ALL
+#  COMMAND mkdir .bin && mv * .bin
+#  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+#  VERBATIM
+#)
 ecbuild_bundle_finalize()
