@@ -90,6 +90,7 @@ jobs:
           module load stack-python/3.10.8
 
           module load jedi-ufs-env/1.0.0
+          module load fms/2023.02.01
 
           module li
 
@@ -128,6 +129,7 @@ jobs:
 
           # UFS_APP=ATM
           cd ${JEDI_ENV}
+          rm -rf build-*
           mkdir -p build-atm
           cd build-atm
           cmake -DUFS_APP=ATM ../ufs-bundle
@@ -148,21 +150,21 @@ jobs:
           make -j8
 
           # Skip those for now - linker errors because of static/dynamic library mix
-          ## UFS_APP=NG-GODAS
-          #cd ${JEDI_ENV}
-          #mkdir -p build-ng-godas
-          #cd build-ng-godas
-          #cmake -DUFS_APP=NG-GODAS ../ufs-bundle
-          #make update
-          #make -j8
+          UFS_APP=NG-GODAS
+          cd ${JEDI_ENV}
+          mkdir -p build-ng-godas
+          cd build-ng-godas
+          cmake -DUFS_APP=NG-GODAS ../ufs-bundle
+          make update
+          make -j8
           #
-          ## UFS_APP=S2S
-          #cd ${JEDI_ENV}
-          #mkdir -p build-s2s
-          #cd build-s2s
-          #cmake -DUFS_APP=S2S ../ufs-bundle
-          #make update
-          #make -j8
+          # UFS_APP=S2S
+          cd ${JEDI_ENV}
+          mkdir -p build-s2s
+          cd build-s2s
+          cmake -DUFS_APP=S2S ../ufs-bundle
+          make update
+          make -j8
 
       - name: Report Status
         if: always()
