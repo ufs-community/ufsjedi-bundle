@@ -42,7 +42,8 @@ find_package(FMS 2022.04 REQUIRED COMPONENTS R4 R8)
 
 # Core JEDI repositories
 # ----------------------
-ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH feature/ufs-stateset )
+#ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH feature/ufs-stateset)
+ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH develop UPDATE )
 ecbuild_bundle( PROJECT vader GIT "https://github.com/jcsda-internal/vader.git" BRANCH develop UPDATE )
 ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda-internal/saber.git" BRANCH develop UPDATE )
 
@@ -55,13 +56,12 @@ endif()
 ecbuild_bundle( PROJECT crtm GIT "https://github.com/JCSDA/CRTMv3.git" TAG v3.1.0-skylabv7 ) # BRANCH develop UPDATE )
 
 option(ENABLE_IODA_DATA "Obtain ioda test data from ioda-data repository (vs tarball)" ON)
-ecbuild_bundle( PROJECT ioda      GIT "https://github.com/jcsda-internal/ioda.git"      BRANCH develop UPDATE )
 ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/JCSDA-internal/ioda-data.git" BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT ioda      GIT "https://github.com/jcsda-internal/ioda.git"      BRANCH develop UPDATE )
 
 option(ENABLE_UFO_DATA "Obtain ufo test data from ufo-data repository (vs tarball)" ON)
-ecbuild_bundle( PROJECT ufo-data GIT "https://github.com/JCSDA-internal/ufo-data.git"   BRANCH develop UPDATE )
-ecbuild_bundle( PROJECT ufo      GIT "https://github.com/jcsda-internal/ufo.git"        BRANCH develop UPDATE )
-
+ecbuild_bundle( PROJECT ufo-data GIT "https://github.com/jcsda-internal/ufo-data.git" BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT ufo      GIT "https://github.com/jcsda-internal/ufo.git"      BRANCH develop UPDATE )
 
 # Options for building with certain models
 # ----------------------------------------
@@ -171,15 +171,14 @@ set_target_properties( mom6 PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/${CM
 ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.2.0 )
 if(UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES "^(ATM)$")
   option(ENABLE_FV3_JEDI_DATA "Obtain fv3-jedi test data from fv3-jedi-data repository (vs tarball)" ON)
-  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH develop ) 
-  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/ufs-EnsForecasts )  
+  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH develop UPDATE )
+  ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH develop UPDATE )
 elseif(UFS_APP MATCHES "^(NG-GODAS)$")
-  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_dom UPDATE )  
+  ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_dom UPDATE )
   add_dependencies(soca ufs-weather-model)
 else()
   message(FATAL_ERROR "ufs-bundle unknown UFS_APP ${UFS_APP}")
 endif()
-
 
 # Build Doxygen documentation
 # ---------------------------
@@ -187,17 +186,5 @@ option(BUILD_UFSJEDI_BUNDLE_DOC "Build documentation" OFF)
 if(BUILD_UFSJEDI_BUNDLE_DOC)
    add_subdirectory( Documentation )
 endif()
-#message("HEYY cmake_binary_dir is ${CMAKE_BINARY_DIR}")
-#add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/bin/.bin
-#  COMMAND ${CMAKE_COMMAND} -E "mkdir .bin && mv * .bin" 
-#  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-#  DEPENDS mom6
-#  COMMENT "create .bin directory"
-#  VERBATIM
-#)
-#add_custom_target(containerize ALL
-#  COMMAND mkdir .bin && mv * .bin
-#  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-#  VERBATIM
-#)
+
 ecbuild_bundle_finalize()
