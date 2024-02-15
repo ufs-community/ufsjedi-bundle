@@ -129,7 +129,7 @@ jobs:
 
           # UFS_APP=ATM
           cd ${JEDI_ENV}
-          cd oops && git pull origin feature/ufs-stateset && cd ..
+          rm -rf oops
           mkdir -p build-atm
           cd build-atm
           cmake -DUFS_APP=ATM ../ufs-bundle
@@ -139,7 +139,7 @@ jobs:
           # Runs mandatory ctests on the head node
           rm -rf fv3-jedi/test/Data/ModelRunDirs/UFS_warmstart/*
           rm -rf fv3-jedi/test/Data/ModelRunDirs/UFS_warmstart_2/*
-          ctest -R ufs_
+          ctest -V -R ufs_
 
           # UFS_APP=ATMAERO
           cd ${JEDI_ENV}
