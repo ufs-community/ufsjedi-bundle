@@ -151,6 +151,7 @@ jobs:
           # Skip those for now - linker errors because of static/dynamic library mix
           UFS_APP=NG-GODAS
           cd ${JEDI_ENV}
+          rm -rf build-ng-godas
           mkdir -p build-ng-godas
           cd build-ng-godas
           cmake -DUFS_APP=NG-GODAS ../ufs-bundle
