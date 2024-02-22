@@ -132,6 +132,8 @@ jobs:
           rm -rf build-*
           mkdir -p build-atm
           cd build-atm
+          rm -rf ../ufs-bundle/fv3-jedi
+          rm -rf fv3-jedi
           cmake -DUFS_APP=ATM ../ufs-bundle
           make update
           make -j8
