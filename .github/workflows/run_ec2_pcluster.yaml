@@ -139,7 +139,7 @@ jobs:
           # Runs mandatory ctests on the head node
           rm -rf fv3-jedi/test/Data/ModelRunDirs/UFS_warmstart/*
           rm -rf fv3-jedi/test/Data/ModelRunDirs/UFS_warmstart_2/*
-          ctest -R ufs_
+          ctest -V -R ufs_
 
           # UFS_APP=ATMAERO
           cd ${JEDI_ENV}
