@@ -132,8 +132,6 @@ jobs:
           rm -rf build-*
           mkdir -p build-atm
           cd build-atm
-          rm -rf ../ufs-bundle/fv3-jedi
-          rm -rf fv3-jedi
           cmake -DUFS_APP=ATM ../ufs-bundle
           make update
           make -j8
@@ -141,7 +139,7 @@ jobs:
           # Runs mandatory ctests on the head node
           rm -rf fv3-jedi/test/Data/ModelRunDirs/UFS_warmstart/*
           rm -rf fv3-jedi/test/Data/ModelRunDirs/UFS_warmstart_2/*
-          ctest -V -R ufs_
+          ctest -R ufs_
 
           # UFS_APP=ATMAERO
           cd ${JEDI_ENV}
