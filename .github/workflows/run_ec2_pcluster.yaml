@@ -91,7 +91,7 @@ jobs:
           module load sp/2.5.0
 
           module load jedi-ufs-env
-          module load fms/2023.02.01
+          module load fms/2023.04
 
           module li
 
