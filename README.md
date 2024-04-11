@@ -55,7 +55,7 @@ cmake -DCMAKE_BUILD_TYPE=Debug -DUFS_APP=ATMAERO .. 2>&1 | tee log.cmake
 cmake -DCMAKE_BUILD_TYPE=Debug -DUFS_APP=NG-GODAS .. 2>&1 | tee log.cmake
 cmake -DCMAKE_BUILD_TYPE=Debug -DUFS_APP=S2S .. 2>&1 | tee log.cmake
 ```
-When using the native Apple `clang` compiler on macOS with `llvm-openmp` installed via homebrew or spack, it may be necessary to add `-DCMAKE_SHARED_LINKER_FLAGS="${llvm_openmp_ROOT}/lib/libomp.dylib"` to the `cmake` command. We have identified this beig an issue with FMS not declaring its OpenMP dependencies correctly. A bug fix was merged for FMS recently, once the next tag finds its way into spack-stack this will no longer be needed.
+When using the native Apple `clang` compiler on macOS with `llvm-openmp` installed via homebrew or spack, it may be necessary to add `-DCMAKE_SHARED_LINKER_FLAGS="${llvm_openmp_ROOT}/lib/libomp.dylib"` to the `cmake` command. We have identified this being an issue with FMS not declaring its OpenMP dependencies correctly. A bug fix was merged for FMS recently, once the next tag finds its way into spack-stack this will no longer be needed.
 
 While building with soca (NG-GODAS or S2S), there will be a long pause during configuration when `cmake` is downloading the input files for the test to be run.
 
