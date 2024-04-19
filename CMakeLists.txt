@@ -72,6 +72,13 @@ if(NOT UFS_APP MATCHES "^(ATM|ATMAERO|NG-GODAS|S2S)$")
 endif()
 ecbuild_info("Building with UFS application: ${UFS_APP}")
 set(FV3_FORECAST_MODEL "UFS")
+# Warning! The ufs-weather-model configuration below compiles the
+# FV3 dycore in double precision. Set FV3_PRECISION accordingly.
+# If the ufs-weather-model FV3 dycore precision is changed to
+# something else (e.g. via -D32BIT=ON), remember to adjust
+# FV3_PRECISION and check if this configuration exists in
+# fv3-jedi and fv3-jedi-linearmodel.
+set(FV3_PRECISION DOUBLE CACHE STRING "Precision of FV3 core (SINGLE, DOUBLE)")
 
 # fv3-jedi linear model
 # ---------------------
