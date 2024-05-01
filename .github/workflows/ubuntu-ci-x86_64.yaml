@@ -20,7 +20,8 @@ jobs:
 
     steps:
       - name: cleanup
-        if: ${{ github.event_name == 'schedule' }}
+        # DH* REVERT - DO CLEAN UP WITH NEXT PR NO MATTER WHAT
+        #if: ${{ github.event_name == 'schedule' }}
         env:
           JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
         run: |
