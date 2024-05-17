@@ -102,6 +102,8 @@ jobs:
           export KMP_AFFINITY=compact
           export KMP_STACKSIZE=2048m
           export OMP_NUM_THREADS=1
+          export I_MPI_FABRICS=shm
+          export I_MPI_DEBUG=5
 
           EOF
 
