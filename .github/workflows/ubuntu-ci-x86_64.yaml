@@ -50,18 +50,18 @@ jobs:
       #      docker run hello-world
       #    fi
       #
-      #- name: set-credentials
-      #  env:
-      #    GH_USERNAME: ${{ secrets.JCSDABOT_USERNAME }}
-      #    GH_TOKEN: ${{ secrets.JCSDABOT_TOKEN }}
-      #  run: |
-      #    # git config and credentials
-      #    git config --global user.name "Luke Skywalker"
-      #    git config --global user.email "luke@skywalker.org"
-      #    git config --global credential.helper store
-      #    touch ~/.git-credentials
-      #    chmod 0700 ~/.git-credentials
-      #    echo "https://$GH_USERNAME:$GH_TOKEN@github.com" > ~/.git-credentials
+      - name: set-credentials
+        env:
+          GH_USERNAME: ${{ secrets.JCSDABOT_USERNAME }}
+          GH_TOKEN: ${{ secrets.JCSDABOT_TOKEN }}
+        run: |
+          # git config and credentials
+          git config --global user.name "Luke Skywalker"
+          git config --global user.email "luke@skywalker.org"
+          git config --global credential.helper store
+          touch ~/.git-credentials
+          chmod 0700 ~/.git-credentials
+          echo "https://$GH_USERNAME:$GH_TOKEN@github.com" > ~/.git-credentials
       # *DH
 
       - name: create-env-setup-script
