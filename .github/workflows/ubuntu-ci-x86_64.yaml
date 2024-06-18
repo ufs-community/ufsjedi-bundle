@@ -50,18 +50,18 @@ jobs:
       #      docker run hello-world
       #    fi
       #
-      - name: set-credentials
-        env:
-          GH_USERNAME: ${{ secrets.JCSDABOT_USERNAME }}
-          GH_TOKEN: ${{ secrets.JCSDABOT_TOKEN }}
-        run: |
-          # git config and credentials
-          git config --global user.name "Luke Skywalker"
-          git config --global user.email "luke@skywalker.org"
-          git config --global credential.helper store
-          touch ~/.git-credentials
-          chmod 0700 ~/.git-credentials
-          echo "https://$GH_USERNAME:$GH_TOKEN@github.com" > ~/.git-credentials
+      #- name: set-credentials
+      #  env:
+      #    GH_USERNAME: ${{ secrets.JCSDABOT_USERNAME }}
+      #    GH_TOKEN: ${{ secrets.JCSDABOT_TOKEN }}
+      #  run: |
+      #    # git config and credentials
+      #    git config --global user.name "Luke Skywalker"
+      #    git config --global user.email "luke@skywalker.org"
+      #    git config --global credential.helper store
+      #    touch ~/.git-credentials
+      #    chmod 0700 ~/.git-credentials
+      #    echo "https://$GH_USERNAME:$GH_TOKEN@github.com" > ~/.git-credentials
       # *DH
 
       - name: create-env-setup-script
@@ -107,7 +107,7 @@ jobs:
 
           EOF
 
-      - name: clone-build-bundle
+      - name: clone-bundle
         env:
           JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
           UFS_BUNDLE_BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
@@ -129,10 +129,18 @@ jobs:
             echo "Check out a fresh copy of ufs-bundle"
             git clone -b ${UFS_BUNDLE_BRANCH_NAME} https://github.com/jcsda/ufs-bundle
           fi
+          ### DO WE REALLY NEED THIS ??? rm -fr build-*
 
-          # UFS_APP=ATM
+      - name: build-atm
+        env:
+          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
+        run: |
+          # In run directory
           cd ${JEDI_ENV}
-          rm -rf build-*
+
+          # Set environment
+          source setup.sh
+
           mkdir -p build-atm
           cd build-atm
           cmake -DUFS_APP=ATM ../ufs-bundle
@@ -144,25 +152,48 @@ jobs:
           rm -rf fv3-jedi/test/Data/ModelRunDirs/UFS_warmstart_2/*
           ctest -V -R ufs_
 
-          # UFS_APP=ATMAERO
+      - name: build-atmaero
+        env:
+          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
+        run: |
+          # In run directory
           cd ${JEDI_ENV}
+
+          # Set environment
+          source setup.sh
+
           mkdir -p build-atmaero
           cd build-atmaero
           cmake -DUFS_APP=ATMAERO ../ufs-bundle
           make update
           make -j8
 
-          # Skip those for now - linker errors because of static/dynamic library mix
-          UFS_APP=NG-GODAS
+      - name: build-ng-godas
+        env:
+          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
+        run: |
+          # In run directory
           cd ${JEDI_ENV}
+
+          # Set environment
+          source setup.sh
+
           mkdir -p build-ng-godas
           cd build-ng-godas
           cmake -DUFS_APP=NG-GODAS ../ufs-bundle
           make update
           make -j8
-          #
-          # UFS_APP=S2S
+
+      - name: build-s2s
+        env:
+          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
+        run: |
+          # In run directory
           cd ${JEDI_ENV}
+
+          # Set environment
+          source setup.sh
+
           mkdir -p build-s2s
           cd build-s2s
           cmake -DUFS_APP=S2S ../ufs-bundle
