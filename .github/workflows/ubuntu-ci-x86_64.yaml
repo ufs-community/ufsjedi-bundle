@@ -87,7 +87,7 @@ jobs:
           module use /home/ubuntu/spack-stack/modulefiles
           module load ecflow/5.11.4
 
-          module use /home/ubuntu/spack-stack/spack-stack-1.7.0/envs/ue-intel-2021.10.0/install/modulefiles/Core/
+          module use /home/ubuntu/spack-stack-1.7.0/envs/ue-intel-2021.10.0/install/modulefiles/Core/
           module load stack-intel/2021.10.0
           module load stack-intel-oneapi-mpi/2021.10.0
           module load stack-python/3.10.13
@@ -107,7 +107,7 @@ jobs:
 
           EOF
 
-      - name: clone-build-bundle
+      - name: clone-bundle
         env:
           JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
           UFS_BUNDLE_BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
@@ -129,10 +129,18 @@ jobs:
             echo "Check out a fresh copy of ufs-bundle"
             git clone -b ${UFS_BUNDLE_BRANCH_NAME} https://github.com/jcsda/ufs-bundle
           fi
+          ### DO WE REALLY NEED THIS ??? rm -fr build-*
 
-          # UFS_APP=ATM
+      - name: build-atm
+        env:
+          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
+        run: |
+          # In run directory
           cd ${JEDI_ENV}
-          rm -rf build-*
+
+          # Set environment
+          source setup.sh
+
           mkdir -p build-atm
           cd build-atm
           cmake -DUFS_APP=ATM ../ufs-bundle
@@ -144,25 +152,48 @@ jobs:
           rm -rf fv3-jedi/test/Data/ModelRunDirs/UFS_warmstart_2/*
           ctest -V -R ufs_
 
-          # UFS_APP=ATMAERO
+      - name: build-atmaero
+        env:
+          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
+        run: |
+          # In run directory
           cd ${JEDI_ENV}
+
+          # Set environment
+          source setup.sh
+
           mkdir -p build-atmaero
           cd build-atmaero
           cmake -DUFS_APP=ATMAERO ../ufs-bundle
           make update
           make -j8
 
-          # Skip those for now - linker errors because of static/dynamic library mix
-          UFS_APP=NG-GODAS
+      - name: build-ng-godas
+        env:
+          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
+        run: |
+          # In run directory
           cd ${JEDI_ENV}
+
+          # Set environment
+          source setup.sh
+
           mkdir -p build-ng-godas
           cd build-ng-godas
           cmake -DUFS_APP=NG-GODAS ../ufs-bundle
           make update
           make -j8
-          #
-          # UFS_APP=S2S
+
+      - name: build-s2s
+        env:
+          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
+        run: |
+          # In run directory
           cd ${JEDI_ENV}
+
+          # Set environment
+          source setup.sh
+
           mkdir -p build-s2s
           cd build-s2s
           cmake -DUFS_APP=S2S ../ufs-bundle
