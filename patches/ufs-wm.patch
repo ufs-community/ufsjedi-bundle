@@ -1,0 +1,81 @@
+diff --git a/FV3/atmos_cubed_sphere/model/fv_control.F90 b/FV3/atmos_cubed_sphere/model/fv_control.F90
+index bf111af..574e233 100644
+--- a/FV3/atmos_cubed_sphere/model/fv_control.F90
++++ b/FV3/atmos_cubed_sphere/model/fv_control.F90
+@@ -457,6 +457,7 @@ module fv_control_mod
+      allocate(grids_on_this_pe(ngrids))
+      grids_on_this_pe(:) = .false.
+ 
++     grid_pes(1) = npes
+      do n=1,ngrids
+ 
+         if (ngrids == 1 .or. grid_pes(n) == 0) then
+diff --git a/FV3/module_fcst_grid_comp.F90 b/FV3/module_fcst_grid_comp.F90
+index 27cdf95..49825d7 100644
+--- a/FV3/module_fcst_grid_comp.F90
++++ b/FV3/module_fcst_grid_comp.F90
+@@ -575,7 +575,7 @@ if (rc /= ESMF_SUCCESS) write(0,*) 'rc=',rc,__FILE__,__LINE__; if(ESMF_LogFoundE
+     type(ESMF_DistGrid) :: distgrid
+     integer :: jsc, jec, isc, iec, nlev
+     type(domain2D)  :: domain
+-    integer :: n, fcstNpes, tmpvar, k
++    integer :: n, fcstNpes, tmpvar, k, ii
+     logical :: freq_restart, fexist
+     integer, allocatable, dimension(:) :: isl, iel, jsl, jel
+     integer, allocatable, dimension(:,:,:) :: deBlockList
+@@ -600,7 +600,7 @@ if (rc /= ESMF_SUCCESS) write(0,*) 'rc=',rc,__FILE__,__LINE__; if(ESMF_LogFoundE
+                                      Time_restart, Time_step_restart
+     type(time_type)               :: iautime
+     integer                       :: io_unit, calendar_type_res, date_res(6), date_init_res(6)
+-
++    integer,allocatable           :: pelistZero(:)
+     integer,allocatable           :: grid_number_on_all_pets(:)
+     logical,allocatable           :: is_moving_on_all_pets(:), is_moving(:)
+     character(len=7)              :: nest_suffix
+@@ -865,8 +865,9 @@ if (rc /= ESMF_SUCCESS) write(0,*) 'rc=',rc,__FILE__,__LINE__; if(ESMF_LogFoundE
+ 
+         pelist => null()
+         call atmos_model_get_nth_domain_info(n, layout, nx, ny, pelist)
+-        call ESMF_VMBroadcast(vm, bcstData=layout, count=2, rootPet=pelist(1), rc=rc); ESMF_ERR_ABORT(rc)
+-
++!       call ESMF_VMBroadcast(vm, bcstData=layout, count=2, rootPet=pelist(1), rc=rc); ESMF_ERR_ABORT(rc)
++        call ESMF_VMBroadcast(vm, bcstData=layout, count=2, rootPet=0, rc=rc); ESMF_ERR_ABORT(rc)
++        write(6,*) 'HEY, mype, mpp_pe and petlist are',mype, mpp_pe(), pelist
+         if (n==1) then
+            ! on grid==1 (top level parent) determine if the domain is global or regional
+            top_parent_is_global = .true.
+@@ -875,11 +876,16 @@ if (rc /= ESMF_SUCCESS) write(0,*) 'rc=',rc,__FILE__,__LINE__; if(ESMF_LogFoundE
+            endif
+            call mpi_bcast(top_parent_is_global, 1, MPI_LOGICAL, 0, fcst_mpi_comm, rc)
+         endif
+-
++        
+         if (n==1 .and. top_parent_is_global) then
+-
+-          fcstGridComp(n) = ESMF_GridCompCreate(name="global", petList=pelist, rc=rc); ESMF_ERR_ABORT(rc)
+-
++          allocate(pelistZero(fcst_ntasks))
++          do ii=1,fcst_ntasks
++            pelistZero(ii) = ii - 1
++          enddo
++          write(6,*) 'HEY, mpp_pe and petlistZero are',mpp_pe(), pelistZero,fcst_ntasks
++          fcstGridComp(n) = ESMF_GridCompCreate(name="global", petList=pelistZero, rc=rc); ESMF_ERR_ABORT(rc)
++!         fcstGridComp(n) = ESMF_GridCompCreate(name="global", petList=pelist, rc=rc); ESMF_ERR_ABORT(rc)
++          deallocate(pelistZero)
+           call ESMF_InfoGetFromHost(fcstGridComp(n), info=info, rc=rc); ESMF_ERR_ABORT(rc)
+           call ESMF_InfoSet(info, key="layout", values=layout, rc=rc); ESMF_ERR_ABORT(rc)
+           call ESMF_InfoSet(info, key="tilesize", value=Atmos%mlon, rc=rc); ESMF_ERR_ABORT(rc)
+diff --git a/stochastic_physics/mpi_wrapper.F90 b/stochastic_physics/mpi_wrapper.F90
+index 7ccd5a7..8961474 100644
+--- a/stochastic_physics/mpi_wrapper.F90
++++ b/stochastic_physics/mpi_wrapper.F90
+@@ -81,7 +81,8 @@ contains
+       integer, intent(in) :: mpiroot
+       type(MPI_Comm), intent(in) :: mpicomm
+       if (initialized) return
+-      root = mpiroot
++      root = 0
++!     root = mpiroot
+       comm = mpicomm
+       call MPI_COMM_RANK(comm, mype, ierror)
+       call MPI_COMM_SIZE(comm, npes, ierror)
