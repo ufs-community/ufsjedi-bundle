@@ -92,6 +92,12 @@ link_directories(${DEPEND_LIB_ROOT}/${CMAKE_INSTALL_LIBDIR})
 # Set variables for UFS clone and build
 # Needed to get correct OpenMP link libraries on macOS
 set(UFS_CMAKE_EXE_LINKER_FLAGS "-L${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+find_package(FMS 2023.04 REQUIRED COMPONENTS R4 R8)
+if (FV3_PRECISION MATCHES DOUBLE)
+  add_library(fms ALIAS FMS::fms_r8)
+elseif (FV3_PRECISION MATCHES SINGLE)
+  add_library(fms ALIAS FMS::fms_r4)
+endif()
 find_package(OpenMP REQUIRED)
 if(APPLE)
   set(UFS_CMAKE_EXE_LINKER_FLAGS "${UFS_CMAKE_EXE_LINKER_FLAGS} ${OpenMP_libomp_LIBRARY} ${OpenMP_libomp_LIBRARY}")
@@ -173,7 +179,8 @@ set_target_properties( fv3atm PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/${
 set_target_properties( ccppphys PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/${CMAKE_INSTALL_LIBDIR}/libccpp_physics.a )
 set_target_properties( mom6 PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/${CMAKE_INSTALL_LIBDIR}/libmom6.a )
 
-
+# Additional dependencies that we can't know about because ufs-weather-model is an external project 
+target_link_libraries( fv3atm INTERFACE fms )
 
 ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.3.0 )
 if(UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES "^(ATM)$")
