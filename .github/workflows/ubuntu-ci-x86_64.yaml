@@ -15,7 +15,7 @@ defaults:
     shell: bash
 
 env:
-  JEDI_ENV: /mnt/addon/jedi-run/ufs-bundle
+  JEDI_ENV: /home/ubuntu/ufs-bundle/jedi-run
 
 jobs:
   test-ufs-bundle:
