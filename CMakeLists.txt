@@ -42,8 +42,8 @@ find_package(FMS 2022.04 REQUIRED COMPONENTS R4 R8)
 
 # Core JEDI repositories
 # ----------------------
-ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH feature/letkf-stateset )
-#ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH bugfix/stateset-fix )
+ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH feature/letkf-stateset)
+#ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH develop UPDATE )
 ecbuild_bundle( PROJECT vader GIT "https://github.com/jcsda-internal/vader.git" BRANCH develop UPDATE )
 ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda-internal/saber.git" BRANCH develop UPDATE )
 
@@ -92,6 +92,12 @@ link_directories(${DEPEND_LIB_ROOT}/${CMAKE_INSTALL_LIBDIR})
 # Set variables for UFS clone and build
 # Needed to get correct OpenMP link libraries on macOS
 set(UFS_CMAKE_EXE_LINKER_FLAGS "-L${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+find_package(FMS 2023.04 REQUIRED COMPONENTS R4 R8)
+if (FV3_PRECISION MATCHES DOUBLE)
+  add_library(fms ALIAS FMS::fms_r8)
+elseif (FV3_PRECISION MATCHES SINGLE)
+  add_library(fms ALIAS FMS::fms_r4)
+endif()
 find_package(OpenMP REQUIRED)
 if(APPLE)
   set(UFS_CMAKE_EXE_LINKER_FLAGS "${UFS_CMAKE_EXE_LINKER_FLAGS} ${OpenMP_libomp_LIBRARY} ${OpenMP_libomp_LIBRARY}")
@@ -113,8 +119,7 @@ set(UFS_TAG "develop" )
 if(UFS_APP MATCHES "^(NG-GODAS)$")
    set(patch_command ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/patches/ng-godas.patch <SOURCE_DIR> && cd <SOURCE_DIR> && git apply ng-godas.patch)
 else()
-  set(patch_command ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/patches/ufs-wm.patch ${UFS_SOURCE_DIR} && cd ${UFS_SOURCE_DIR} && git apply ufs-wm.patch)
-  message("HEYY!!! patch_command is ${patch_command}")
+   set(patch_command ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/patches/ufs-wm.patch <SOURCE_DIR> && cd <SOURCE_DIR> && git apply ufs-wm.patch)
 endif()
 
 ExternalProject_Add(ufs-weather-model
@@ -175,15 +180,14 @@ set_target_properties( fv3atm PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/${
 set_target_properties( ccppphys PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/${CMAKE_INSTALL_LIBDIR}/libccpp_physics.a )
 set_target_properties( mom6 PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/${CMAKE_INSTALL_LIBDIR}/libmom6.a )
 
-
+# Additional dependencies that we can't know about because ufs-weather-model is an external project 
+target_link_libraries( fv3atm INTERFACE fms )
 
 ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    TAG 1.3.0 )
 if(UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES "^(ATM)$")
   option(ENABLE_FV3_JEDI_DATA "Obtain fv3-jedi test data from fv3-jedi-data repository (vs tarball)" ON)
   ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH feature/letkf-stateset UPDATE )
   ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH feature/letkf-stateset UPDATE )
-# ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH bugfix/stateset-fix UPDATE )
-# ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH dd0f6660f0f379355fc2b7946b5ddf4740241679)
 elseif(UFS_APP MATCHES "^(NG-GODAS)$")
   ecbuild_bundle( PROJECT soca     GIT "https://github.com/jcsda-internal/soca.git" BRANCH feature/ufs_dom_update UPDATE )
   add_dependencies(soca ufs-weather-model)

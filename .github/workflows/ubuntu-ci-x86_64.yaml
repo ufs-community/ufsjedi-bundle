@@ -14,6 +14,9 @@ defaults:
   run:
     shell: bash
 
+env:
+  JEDI_ENV: /home/ubuntu/ufs-bundle/jedi-run
+
 jobs:
   test-ufs-bundle:
     runs-on: [ubuntu-ci-c6a-x86_64]
@@ -21,8 +24,6 @@ jobs:
     steps:
       - name: cleanup
         if: ${{ github.event_name == 'schedule' }}
-        env:
-          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
         run: |
           # Remove and prepare run directory
           rm -fr ${JEDI_ENV}
@@ -65,8 +66,6 @@ jobs:
       # *DH
 
       - name: create-env-setup-script
-        env:
-          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
         run: |
           # In run directory
           cd ${JEDI_ENV}
@@ -109,7 +108,6 @@ jobs:
 
       - name: clone-bundle
         env:
-          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
           UFS_BUNDLE_BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
         run: |
           # In run directory
@@ -132,8 +130,6 @@ jobs:
           ### DO WE REALLY NEED THIS ??? rm -fr build-*
 
       - name: build-atm
-        env:
-          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
         run: |
           # In run directory
           cd ${JEDI_ENV}
@@ -153,8 +149,6 @@ jobs:
           ctest -V -R ufs_
 
       - name: build-atmaero
-        env:
-          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
         run: |
           # In run directory
           cd ${JEDI_ENV}
@@ -169,8 +163,6 @@ jobs:
           make -j8
 
       - name: build-ng-godas
-        env:
-          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
         run: |
           # In run directory
           cd ${JEDI_ENV}
@@ -185,8 +177,6 @@ jobs:
           make -j8
 
       - name: build-s2s
-        env:
-          JEDI_ENV: /home/ubuntu/ufs-bundle/jedi_run
         run: |
           # In run directory
           cd ${JEDI_ENV}
