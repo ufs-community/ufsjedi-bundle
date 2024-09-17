@@ -11,25 +11,38 @@ find_package( ecbuild 3.5 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CUR
 
 project( ufs-bundle VERSION 1.1.0 LANGUAGES C CXX Fortran )
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
-include( ecbuild_bundle )
-include( GNUInstallDirs )
-set(CMAKE_INSTALL_LIBDIR "lib")
-
-set(DEPEND_LIB_ROOT ${CMAKE_CURRENT_BINARY_DIR}/Depends)
-list(APPEND CMAKE_PREFIX_PATH ${DEPEND_LIB_ROOT})
-message("prefix path is ${CMAKE_PREFIX_PATH}")
-
 # Default release mode
 set( ECBUILD_DEFAULT_BUILD_TYPE Release )
 
-# Enable MPI
-set( ENABLE_MPI ON CACHE BOOL "Compile with MPI")
-set( ENABLE_OMP ON CACHE BOOL "Compile with OpenMP")
+# Enable OpenMP and MPI
+set( ENABLE_MPI ON CACHE BOOL "Compile with MPI" )
+set( ENABLE_OMP ON CACHE BOOL "Compile with OpenMP" )
 
-# Use external jedi-cmake or build in bundle
+# Depend path for non-ecbuild packages
+set(DEPEND_LIB_ROOT ${CMAKE_CURRENT_BINARY_DIR}/Depends)
+list(APPEND CMAKE_PREFIX_PATH ${DEPEND_LIB_ROOT})
+
+# Library path for non-ecbuild packages
+link_directories(${CMAKE_CURRENT_BINARY_DIR}/lib)
+
+include( GNUInstallDirs )
+if(APPLE)
+	list( APPEND CMAKE_INSTALL_RPATH $ENV{llvm_openmp_ROOT}/lib )
+endif()
+
+# add the automatically determined parts of the RPATH
+# which point to directories outside the build tree to the install RPATH
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
+
+# when building, already use the install RPATH
+set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
+
+# Define bundle
+ecbuild_bundle_initialize()
+
+# Use external jedi-cmake
 include( $ENV{jedi_cmake_ROOT}/share/jedicmake/Functions/git_functions.cmake )
+
 
 # ECMWF libs
 # ----------
@@ -53,7 +66,7 @@ if(UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES
 endif()
 
 # Use last known working tag until issues with new pure cmake build are resolved
-ecbuild_bundle( PROJECT crtm GIT "https://github.com/JCSDA/CRTMv3.git" TAG v3.1.0-skylabv7 ) # BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT crtm GIT "https://github.com/JCSDA/CRTMv3.git" BRANCH develop UPDATE )
 
 option(ENABLE_IODA_DATA "Obtain ioda test data from ioda-data repository (vs tarball)" ON)
 ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/JCSDA-internal/ioda-data.git" BRANCH develop UPDATE )
