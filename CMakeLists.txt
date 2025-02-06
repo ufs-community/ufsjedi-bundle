@@ -49,6 +49,7 @@ ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda/saber.git" BRANCH de
 
 if(UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES "^(NG-GODAS)$")
   ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda/GSW-Fortran.git" BRANCH develop UPDATE )
+
 endif()
 
 # Use last known working tag until issues with new pure cmake build are resolved
@@ -56,11 +57,13 @@ ecbuild_bundle( PROJECT crtm GIT "https://github.com/JCSDA/CRTMv3.git" TAG v3.1.
 
 option(ENABLE_IODA_DATA "Obtain ioda test data from ioda-data repository (vs tarball)" ON)
 ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/JCSDA-internal/ioda-data.git" BRANCH develop UPDATE )
+
 ecbuild_bundle( PROJECT ioda      GIT "https://github.com/jcsda/ioda.git"      BRANCH develop UPDATE )
 
 option(ENABLE_UFO_DATA "Obtain ufo test data from ufo-data repository (vs tarball)" ON)
 ecbuild_bundle( PROJECT ufo-data GIT "https://github.com/jcsda-internal/ufo-data.git" BRANCH develop UPDATE )
 ecbuild_bundle( PROJECT ufo      GIT "https://github.com/jcsda/ufo.git"      BRANCH develop UPDATE )
+
 
 # Options for building with certain models
 # ----------------------------------------
@@ -81,7 +84,9 @@ set(FV3_PRECISION DOUBLE CACHE STRING "Precision of FV3 core (SINGLE, DOUBLE)")
 
 # fv3-jedi linear model
 # ---------------------
+
 ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda/fv3-jedi-linearmodel.git" BRANCH develop UPDATE )
+
 message(INFO "CMAKE_INSTALL_LIBDIR: ${CMAKE_INSTALL_LIBDIR}")
 include_directories(${DEPEND_LIB_ROOT}/${CMAKE_INSTALL_INCLUDEDIR})
 include_directories(${DEPEND_LIB_ROOT}/include_r8)
@@ -111,7 +116,7 @@ else()
 endif()
 
 
-#set(UFS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model-cont)
+
 set(UFS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model)
 set(UFS_REPO https://github.com/ufs-community/ufs-weather-model)
 set(UFS_TAG "develop" )
@@ -181,6 +186,7 @@ set_target_properties( mom6 PROPERTIES IMPORTED_LOCATION ${DEPEND_LIB_ROOT}/${CM
 
 # Additional dependencies that we can't know about because ufs-weather-model is an external project 
 target_link_libraries( fv3atm INTERFACE fms )
+
 
 ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda/femps.git"    TAG 1.3.0 )
 if(UFS_APP MATCHES "^(ATMAERO)$" OR UFS_APP MATCHES "^(S2S)$" OR UFS_APP MATCHES "^(ATM)$")
