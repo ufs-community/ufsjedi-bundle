@@ -1,0 +1,269 @@
+diff --git a/MOM6-interface/MOM6/config_src/drivers/nuopc_cap/mom_cap.F90 b/MOM6-interface/MOM6/config_src/drivers/nuopc_cap/mom_cap.F90
+index 2fdd6f59f..1dcb495c4 100644
+--- a/MOM6-interface/MOM6/config_src/drivers/nuopc_cap/mom_cap.F90
++++ b/MOM6-interface/MOM6/config_src/drivers/nuopc_cap/mom_cap.F90
+@@ -795,6 +795,10 @@ subroutine InitializeAdvertise(gcomp, importState, exportState, clock, rc)
+   call fld_list_add(fldsFrOcn_num, fldsFrOcn, "So_dhdy"    , "will provide")
+   call fld_list_add(fldsFrOcn_num, fldsFrOcn, "Fioo_q"     , "will provide")
+   call fld_list_add(fldsFrOcn_num, fldsFrOcn, "So_bldepth" , "will provide")
++  call fld_list_add(fldsFrOcn_num, fldsFrOcn, "tocn"                       , "will provide")
++  call fld_list_add(fldsFrOcn_num, fldsFrOcn, "socn"                       , "will provide")
++  call fld_list_add(fldsFrOcn_num, fldsFrOcn, "uocn"                       , "will provide")
++  call fld_list_add(fldsFrOcn_num, fldsFrOcn, "vocn"                       , "will provide")
+ 
+   do n = 1,fldsToOcn_num
+     call NUOPC_Advertise(importState, standardName=fldsToOcn(n)%stdname, name=fldsToOcn(n)%shortname, rc=rc)
+@@ -1059,10 +1063,10 @@ subroutine InitializeRealize(gcomp, importState, exportState, clock, rc)
+     end do
+ 
+     ! realize the import and export fields using the mesh
+-    call MOM_RealizeFields(importState, fldsToOcn_num, fldsToOcn, "Ocn import", mesh=Emesh, rc=rc)
++    call MOM_RealizeFields(importState, fldsToOcn_num, fldsToOcn, "Ocn import", mesh=Emesh, ke=ocean_grid%ke, rc=rc)
+     if (ChkErr(rc,__LINE__,u_FILE_u)) return
+ 
+-    call MOM_RealizeFields(exportState, fldsFrOcn_num, fldsFrOcn, "Ocn export", mesh=Emesh, rc=rc)
++    call MOM_RealizeFields(exportState, fldsFrOcn_num, fldsFrOcn, "Ocn export", mesh=Emesh, ke=ocean_grid%ke, rc=rc)
+     if (ChkErr(rc,__LINE__,u_FILE_u)) return
+ 
+     !---------------------------------
+@@ -2064,7 +2068,7 @@ subroutine State_SetScalar(value, scalar_id, State, mytask, scalar_name, scalar_
+ end subroutine State_SetScalar
+ 
+ !> Realize the import and export fields using either a grid or a mesh.
+-subroutine MOM_RealizeFields(state, nfields, field_defs, tag, grid, mesh, rc)
++subroutine MOM_RealizeFields(state, nfields, field_defs, tag, grid, mesh, ke, rc)
+   type(ESMF_State)    , intent(inout)        :: state !< ESMF_State object for
+                                                       !! import/export fields.
+   integer             , intent(in)           :: nfields !< Number of fields.
+@@ -2073,6 +2077,7 @@ subroutine MOM_RealizeFields(state, nfields, field_defs, tag, grid, mesh, rc)
+   character(len=*)    , intent(in)           :: tag !< Import or export.
+   type(ESMF_Grid)     , intent(in), optional :: grid!< ESMF grid.
+   type(ESMF_Mesh)     , intent(in), optional :: mesh!< ESMF mesh.
++  integer             , intent(in), optional :: ke  !< vertical levels
+   integer             , intent(inout)        :: rc  !< Return code.
+ 
+   ! local variables
+@@ -2121,7 +2126,16 @@ subroutine MOM_RealizeFields(state, nfields, field_defs, tag, grid, mesh, rc)
+ 
+         else if (present(mesh)) then
+ 
+-          if (field_defs(i)%ungridded_lbound > 0 .and. field_defs(i)%ungridded_ubound > 0) then
++          if((field_defs(i)%shortname == 'tocn').or.(field_defs(i)%shortname == 'socn').or. &
++             (field_defs(i)%shortname == 'vocn').or.(field_defs(i)%shortname == 'uocn')) then
++            field = ESMF_FieldCreate(mesh=mesh, typekind=ESMF_TYPEKIND_R8, meshloc=ESMF_MESHLOC_ELEMENT, &
++                 ungriddedLBound=(/1/), ungriddedUBound=(/ke/),name=field_defs(i)%shortname, rc=rc)
++            if (ChkErr(rc,__LINE__,u_FILE_u)) return
++            ! initialize fldptr to zero
++            call ESMF_FieldGet(field, farrayPtr=fldptr2d, rc=rc)
++            if (ChkErr(rc,__LINE__,u_FILE_u)) return
++            fldptr2d(:,:) = 0.0
++          else if (field_defs(i)%ungridded_lbound > 0 .and. field_defs(i)%ungridded_ubound > 0) then
+             field = ESMF_FieldCreate(mesh=mesh, typekind=ESMF_TYPEKIND_R8, meshloc=ESMF_MESHLOC_ELEMENT, &
+                  name=field_defs(i)%shortname, ungriddedLbound=(/field_defs(i)%ungridded_lbound/), &
+                  ungriddedUbound=(/field_defs(i)%ungridded_ubound/), gridToFieldMap=(/2/), rc=rc)
+diff --git a/MOM6-interface/MOM6/config_src/drivers/nuopc_cap/mom_cap_methods.F90 b/MOM6-interface/MOM6/config_src/drivers/nuopc_cap/mom_cap_methods.F90
+index f41c98b11..d2abb2ce1 100644
+--- a/MOM6-interface/MOM6/config_src/drivers/nuopc_cap/mom_cap_methods.F90
++++ b/MOM6-interface/MOM6/config_src/drivers/nuopc_cap/mom_cap_methods.F90
+@@ -21,6 +21,7 @@ use MOM_surface_forcing_nuopc, only: ice_ocean_boundary_type
+ use MOM_grid,                  only: ocean_grid_type
+ use MOM_domains,               only: pass_var
+ use mpp_domains_mod,           only: mpp_get_compute_domain
++use MOM_variables,             only: thermo_var_ptrs
+ 
+ ! By default make data private
+ implicit none; private
+@@ -38,6 +39,7 @@ interface State_getImport
+ end interface
+ 
+ private :: State_setExport
++private :: State3d_setExport
+ 
+ !> Get field pointer
+ interface State_GetFldPtr
+@@ -380,7 +382,7 @@ subroutine mom_export(ocean_public, ocean_grid, ocean_state, exportState, clock,
+   integer                         :: isc, iec, jsc, jec   ! indices
+   integer                         :: iloc, jloc           ! indices
+   integer                         :: iglob, jglob         ! indices
+-  integer                         :: n
++  integer                         :: n, k
+   integer                         :: icount
+   real                            :: slp_L, slp_R, slp_C
+   real                            :: slope, u_min, u_max
+@@ -525,6 +527,46 @@ subroutine mom_export(ocean_public, ocean_grid, ocean_state, exportState, clock,
+     if (ChkErr(rc,__LINE__,u_FILE_u)) return
+   endif
+ 
++  ! -------
++  ! 3D Temperature
++  ! -------
++  call ESMF_StateGet(exportState, 'tocn', itemFlag, rc=rc)
++  if (itemFlag /= ESMF_STATEITEM_NOTFOUND) then
++     call State3d_SetExport(exportState, 'tocn', &
++          isc, iec, jsc, jec, ocean_grid%ke, ocean_state%MOM_CSp%T, ocean_grid, rc=rc)
++     if (ChkErr(rc,__LINE__,u_FILE_u)) return
++  endif
++
++  ! -------
++  ! 3D Salinity
++  ! -------
++  call ESMF_StateGet(exportState, 'socn', itemFlag, rc=rc)
++  if (itemFlag /= ESMF_STATEITEM_NOTFOUND) then
++     call State3d_SetExport(exportState, 'socn', &
++          isc, iec, jsc, jec, ocean_grid%ke, ocean_state%MOM_CSp%S, ocean_grid, rc=rc)
++     if (ChkErr(rc,__LINE__,u_FILE_u)) return
++  endif
++
++  ! -------
++  ! 3D U velocity
++  ! -------
++  call ESMF_StateGet(exportState, 'uocn', itemFlag, rc=rc)
++  if (itemFlag /= ESMF_STATEITEM_NOTFOUND) then
++     call State3d_SetExport(exportState, 'uocn', &
++          isc, iec, jsc, jec, ocean_grid%ke, ocean_state%MOM_CSp%u, ocean_grid, rc=rc)
++     if (ChkErr(rc,__LINE__,u_FILE_u)) return
++  endif
++
++  ! -------
++  ! 3D V velocity
++  ! -------
++  call ESMF_StateGet(exportState, 'vocn', itemFlag, rc=rc)
++  if (itemFlag /= ESMF_STATEITEM_NOTFOUND) then
++     call State3d_SetExport(exportState, 'vocn', &
++          isc, iec, jsc, jec, ocean_grid%ke, ocean_state%MOM_CSp%v, ocean_grid, rc=rc)
++     if (ChkErr(rc,__LINE__,u_FILE_u)) return
++  endif
++
+   !----------------
+   ! Sea-surface zonal and meridional slopes
+   !----------------
+@@ -664,7 +706,7 @@ subroutine State_GetFldPtr_2d(State, fldname, fldptr, rc)
+   ! local variables
+   type(ESMF_Field) :: lfield
+   integer :: lrc
+-  character(len=*),parameter :: subname='(MOM_cap:State_GetFldPtr)'
++  character(len=*),parameter :: subname='(MOM_cap:State_GetFldPtr2d)'
+ 
+   call ESMF_StateGet(State, itemName=trim(fldname), field=lfield, rc=lrc)
+   if (ChkErr(rc,__LINE__,u_FILE_u)) return
+@@ -913,6 +955,55 @@ subroutine State_SetExport(state, fldname, isc, iec, jsc, jec, input, ocean_grid
+ 
+ end subroutine State_SetExport
+ 
++!> Map input array to export state
++subroutine State3d_SetExport(state, fldname, isc, iec, jsc, jec, ke, input, ocean_grid, areacor, rc)
++  type(ESMF_State)      , intent(inout) :: state   !< ESMF state
++  character(len=*)      , intent(in)    :: fldname !< Field name
++  integer             , intent(in)      :: isc     !< The start i-index of cell centers within
++                                                   !! the computational domain
++  integer             , intent(in)      :: iec     !< The end i-index of cell centers within the
++                                                   !! computational domain
++  integer             , intent(in)      :: jsc     !< The start j-index of cell centers within
++                                                   !! the computational domain
++  integer             , intent(in)      :: jec     !< The end j-index of cell centers within
++                                                   !! the computational domain
++  integer             , intent(in)      :: ke      !< The number of vertical levels
++  real (ESMF_KIND_R8)   , intent(in)    :: input(isc:iec,jsc:jec,1:ke)!< Input 3D array
++  type(ocean_grid_type) , intent(in)    :: ocean_grid !< Ocean horizontal grid
++  real (ESMF_KIND_R8), optional,  intent(in) :: areacor(:) !< flux area correction factors
++                                                           !! applicable to meshes
++  integer               , intent(out)   :: rc         !< Return code
++
++  ! local variables
++  type(ESMF_StateItem_Flag)     :: itemFlag
++  integer                       :: n, i, j, i1, j1, ig,jg, k, ii, jj
++  integer                       :: lbnd1,lbnd2
++  real(ESMF_KIND_R8), pointer   :: dataPtr2d(:,:)
++  character(len=*)  , parameter :: subname='(MOM_cap_methods:state_setexport)'
++  ! ----------------------------------------------
++
++  rc = ESMF_SUCCESS
++
++  ! Indexing notes:
++  ! input array from "ocean_public" uses local indexing without halos
++  ! mask from "ocean_grid" uses local indexing with halos
++
++  call ESMF_StateGet(State, trim(fldname), itemFlag, rc=rc)
++  if (itemFlag /= ESMF_STATEITEM_NOTFOUND) then
++        call state_getfldptr(State, trim(fldname), dataptr2d, rc)
++        if (ChkErr(rc,__LINE__,u_FILE_u)) return
++        do k=1,ke
++          do j=jsc,jec
++            jj = j - jsc
++            do i=isc,iec
++              ii = i - isc + 1
++              dataptr2d(jj*(iec-isc + 1)+ii,k) = input(i,j,k)
++            enddo
++          enddo
++        enddo
++  endif
++end subroutine State3d_SetExport
++
+ !> This subroutine writes the minimum, maximum and sum of each field
+ !! contained within an ESMF state.
+ subroutine state_diagnose(State, string, rc)
+diff --git a/MOM6-interface/MOM6/config_src/drivers/nuopc_cap/mom_ocean_model_nuopc.F90 b/MOM6-interface/MOM6/config_src/drivers/nuopc_cap/mom_ocean_model_nuopc.F90
+index 04b60b0d3..e85e18d3b 100644
+--- a/MOM6-interface/MOM6/config_src/drivers/nuopc_cap/mom_ocean_model_nuopc.F90
++++ b/MOM6-interface/MOM6/config_src/drivers/nuopc_cap/mom_ocean_model_nuopc.F90
+@@ -132,7 +132,7 @@ end type ocean_public_type
+ !> The ocean_state_type contains all information about the state of the ocean,
+ !! with a format that is private so it can be readily changed without disrupting
+ !! other coupled components.
+-type, public :: ocean_state_type ; private
++type, public :: ocean_state_type ;
+   ! This type is private, and can therefore vary between different ocean models.
+   logical :: is_ocean_PE = .false.  !< True if this is an ocean PE.
+   type(time_type) :: Time     !< The ocean model's time and master clock.
+diff --git a/MOM6-interface/MOM6/src/core/MOM.F90 b/MOM6-interface/MOM6/src/core/MOM.F90
+index 89d1ee200..fda9720f5 100644
+--- a/MOM6-interface/MOM6/src/core/MOM.F90
++++ b/MOM6-interface/MOM6/src/core/MOM.F90
+@@ -183,7 +183,7 @@ end type MOM_diag_IDs
+ 
+ !> Control structure for the MOM module, including the variables that describe
+ !! the state of the ocean.
+-type, public :: MOM_control_struct ; private
++type, public :: MOM_control_struct ;
+   real ALLOCABLE_, dimension(NIMEM_,NJMEM_,NKMEM_) :: &
+     h, &            !< layer thickness [H ~> m or kg m-2]
+     T, &            !< potential temperature [C ~> degC]
+diff --git a/MOM6-interface/MOM6/src/framework/MOM_horizontal_regridding.F90 b/MOM6-interface/MOM6/src/framework/MOM_horizontal_regridding.F90
+index 34d0b73cb..b7c656d51 100644
+--- a/MOM6-interface/MOM6/src/framework/MOM_horizontal_regridding.F90
++++ b/MOM6-interface/MOM6/src/framework/MOM_horizontal_regridding.F90
+@@ -26,7 +26,7 @@ implicit none ; private
+ 
+ #include <MOM_memory.h>
+ 
+-public :: horiz_interp_and_extrap_tracer, myStats, homogenize_field
++public :: horiz_interp_and_extrap_tracer, myStats, homogenize_field, meshgrid, fill_miss_2d
+ 
+ !> Extrapolate and interpolate data
+ interface horiz_interp_and_extrap_tracer
+diff --git a/MOM6-interface/MOM6/pkg/GSW-Fortran/modules/gsw_mod_toolbox.f90 b/MOM6-interface/MOM6/pkg/GSW-Fortran/modules/gsw_mod_toolbox.f90
+index a8012e1..9ae2f7d 100644
+--- a/MOM6-interface/MOM6/pkg/GSW-Fortran/modules/gsw_mod_toolbox.f90
++++ b/MOM6-interface/MOM6/pkg/GSW-Fortran/modules/gsw_mod_toolbox.f90
+@@ -94,6 +94,7 @@ public :: gsw_melting_seaice_equilibrium_sa_ct_ratio_poly
+ public :: gsw_melting_seaice_into_seawater
+ public :: gsw_melting_seaice_sa_ct_ratio
+ public :: gsw_melting_seaice_sa_ct_ratio_poly
++public :: gsw_mlp
+ public :: gsw_nsquared
+ public :: gsw_pot_enthalpy_from_pt_ice
+ public :: gsw_pot_enthalpy_from_pt_ice_poly
+@@ -842,6 +843,13 @@ interface
+     real (r8) :: gsw_melting_seaice_sa_ct_ratio_poly
+     end function gsw_melting_seaice_sa_ct_ratio_poly
+     
++    pure function gsw_mlp (sa, ct, p)
++    use gsw_mod_kinds
++    implicit none
++    real (r8), intent(in) :: sa(:), ct(:), p(:)
++    real (r8) :: gsw_mlp
++    end function gsw_mlp
++
+     pure subroutine gsw_nsquared (sa, ct, p, lat, n2, p_mid)
+     use gsw_mod_kinds
+     implicit none
