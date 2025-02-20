@@ -40,6 +40,7 @@ index 27cdf95..49825d7 100644
 -
 +!       call ESMF_VMBroadcast(vm, bcstData=layout, count=2, rootPet=pelist(1), rc=rc); ESMF_ERR_ABORT(rc)
 +        call ESMF_VMBroadcast(vm, bcstData=layout, count=2, rootPet=0, rc=rc); ESMF_ERR_ABORT(rc)
++        write(6,*) 'HEY, mype, mpp_pe and petlist are',mype, mpp_pe(), pelist
          if (n==1) then
             ! on grid==1 (top level parent) determine if the domain is global or regional
             top_parent_is_global = .true.
@@ -57,6 +58,7 @@ index 27cdf95..49825d7 100644
 +          do ii=1,fcst_ntasks
 +            pelistZero(ii) = ii - 1
 +          enddo
++          write(6,*) 'HEY, mpp_pe and petlistZero are',mpp_pe(), pelistZero,fcst_ntasks
 +          fcstGridComp(n) = ESMF_GridCompCreate(name="global", petList=pelistZero, rc=rc); ESMF_ERR_ABORT(rc)
 +!         fcstGridComp(n) = ESMF_GridCompCreate(name="global", petList=pelist, rc=rc); ESMF_ERR_ABORT(rc)
 +          deallocate(pelistZero)
